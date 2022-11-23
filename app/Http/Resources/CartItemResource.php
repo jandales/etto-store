@@ -14,15 +14,14 @@ class CartItemResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
-     
+    {     
         return [
             'id' => $this->id,
             'product' => [
                 'id' => $this->whenLoaded('product')->id,
                 'uuid' => $this->whenLoaded('product')->uuid,
                 'name' => $this->whenLoaded('product')->name, 
-                'price' => Currency::format($this->whenLoaded('product')->regular_price),
+                'price' => $this->whenLoaded('product')->regular_price,
                 'image' => [
                     'src' => $this->whenLoaded('product')->images[0]->path,
                     'alt' => $this->whenLoaded('product')->images[0]->alt,
@@ -30,8 +29,7 @@ class CartItemResource extends JsonResource
             ],            
             "qty" => $this->qty,        
             "attributes" =>  $this->attributes,
-            'subtotal' =>  Currency::format($this->qty * ($this->whenLoaded('product')->regular_price ?? 0)),
-           
+            'subtotal' => $this->qty * ($this->whenLoaded('product')->regular_price ?? 0),           
         ];
     }
 }

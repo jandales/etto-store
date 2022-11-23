@@ -28,7 +28,7 @@ import CartQty from './CartQty.vue';
 const props = defineProps({
     item : {
         required : true,
-        type : Array,
+        type : Object,
     }
 });
 </script>

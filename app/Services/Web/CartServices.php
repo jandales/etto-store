@@ -85,6 +85,21 @@ class CartServices
         
     }
 
+    public function updateItemQuantity($id, $qty)
+    {
+        $item = $this->cart->items->where('id', $id)->first();
+        $item->qty = $qty;
+        $item->save();
+        return $item;
+    }
+
+    public function destroyItem($id)
+    {
+        $item = $this->cart->items->where('id', $id)->first();
+        return $item->delete();    
+    }
+
+
     public function getItems()
     {
         return $this->cart->items->load('product');

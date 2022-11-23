@@ -41,10 +41,18 @@ class Cart extends Model
 
     public function subtotal()
     {
-        return $this->items->map(function($item){
-            return $item->price * $item->qty;
+        $subtotals =  $this->items->map(function($item){
+            return $item->product->regular_price * $item->qty;
         });
 
-      
+        $total = 0;
+
+        foreach($subtotals as $subtotal)
+        {
+            $total += $subtotal;    
+        }
+
+        return $total;
+
     }
 }
