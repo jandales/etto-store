@@ -107,7 +107,16 @@ class CartServices
 
     public function getSubtotal()
     {
-        return $this->cart->subtotal();
+        return $this->cart->subtotal() ?? 0;
+    }
+
+    public function getCartCount()
+    {        
+        $total = 0;
+        foreach($this->cart->items as $item) {
+            $total += $item->qty;
+        }
+        return $total;
     }
 
 

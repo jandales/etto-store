@@ -18,18 +18,16 @@ import Navigation from '../components/Navigation.vue';
 import Footer from '../components/Footer.vue';
 import Cart from '../components/Cart.vue';
 
-import { ref, provide, watch } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-
+import { ref, provide } from 'vue';
 
 const cartState = ref(false);
+
+
 
 provide('cart', {
     cartState,
     toggleCart: (state) => cartState.value = state, 
 })
-
-
 
 onMounted(() => axios.get('/cookie/cart/store'))
 

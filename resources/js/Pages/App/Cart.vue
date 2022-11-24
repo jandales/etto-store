@@ -10,8 +10,8 @@
               <CartOrderSummary :subtotal="subtotal" />
           </div>         
         </div>
-        <div v-else class="mt-16">
-            <h3 class="text-gray-500 text-3xl text-center">No Item Found</h3>
+        <div v-else class="mt-12">
+            <h3 class="text-gray-500 text-2xl">Your cart is currently empty.</h3>
         </div>
       </PageWrapper>
   </AppLayout>

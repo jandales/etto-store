@@ -11,7 +11,7 @@
           <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
             <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
               <DialogPanel class="pointer-events-auto w-screen max-w-md">
-                <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                <div  class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                   <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                     <div class="flex items-start justify-between">
                       <DialogTitle class="text-lg font-medium text-gray-900">Shopping cart</DialogTitle>
@@ -25,37 +25,18 @@
  
                     <div class="mt-8">
                       <div class="flow-root">
-                        <ul v-if="cart" role="list" class="-my-6 divide-y divide-gray-200">
-                          <li v-for="item in items" :key="item.id" class="flex py-6">
-                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                              <img :src="item.product.image.src" :alt="item.product.image.alt" class="h-full w-full object-cover object-center" />
-                            </div>
-
-                            <div class="ml-4 flex flex-1 flex-col">
-                              <div>
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                  <h3>
-                                    <a href="#">{{ item.name }}</a>
-                                  </h3>
-                                  <p class="ml-4">{{ item.product.price }}</p>
-                                </div>
-                                <p class="mt-1 text-sm text-gray-500">{{ item.attributes.color }}</p>
-                              </div>
-                              <div class="flex flex-1 items-end justify-between text-sm">
-                                <p class="text-gray-500">Qty {{ item.qty }}</p>
-
-                                <div class="flex">
-                                  <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
+                        <CartList v-if="cart && cart.items.length > 0">
+                          <CartItem v-for="item in items" :key="item.id" :item="item" @remove="getCart" />
+                        </CartList>
+                        <div v-if="cart && cart.items.length == 0 && !isLoading">
+                          <h2>Your cart is currently empty.</h2>
+                        </div>
+                        <ClipLoader v-if="isLoading" />
                       </div>
                     </div>
                   </div>
 
-                  <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+                  <div v-if="cart && cart.items.length > 0" class="border-t border-gray-200 py-6 px-4 sm:px-6">
                     <div class="flex justify-between text-base font-medium text-gray-900">
                       <p>Subtotal</p>
                       <p>{{ subtotal }}</p>
@@ -85,33 +66,36 @@
 </template>
   
 <script setup>
-import { ref, inject, onMounted, watch, computed, reactive } from 'vue'
-import axios from 'axios'
+
+import { ref, inject, watch, computed,  defineAsyncComponent } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-
+import axios from 'axios'
 import useCurrency from '@/Composable/currency';
+import CartList from '@/Shared/components/cart/MiniCart/CartList.vue'
+import CartItem from '@/Shared/components/cart/MiniCart/CartItem.vue'
+
+const ClipLoader = defineAsyncComponent(() => import('@/Shared/ClipLoader.vue'));
 const { currencyFormat } = useCurrency();
 
 const cart = ref(null);
-
-
+const isLoading = ref(false);
 const { cartState, toggleCart } = inject('cart');
 
 
-const items = computed(() => {
-
+const items = computed( () => {
   if (cart.value === null) return [];
 
-  let { currency, items } = cart.value
+  let {  items } = cart.value
 
   return items.map((item) => {
     item.product.price = currencyFormat(item.product.price)
     item.subtotal = currencyFormat(item.subtotal)
     return item;
   })
-
 })
+
+
 
 const subtotal = computed(() => {
   if (cart.value === null) return 0.00;
@@ -119,10 +103,17 @@ const subtotal = computed(() => {
   return currencyFormat(subtotal)
 });
 
+
 const getCart = async () => {
-  let response = await axios.get('/cart');  
-  cart.value = response.data.cart; 
-  console.log(cart.value)
+  isLoading.value = items.value.length === 0 ? true : false;
+  try {
+    let response = await axios.get('/cart');
+    cart.value = response.data.cart;
+  } catch (error) {
+    console.log(error)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 

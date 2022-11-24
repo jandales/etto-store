@@ -105,7 +105,7 @@
                 <a href="#" @click="toggleCart(true)" class="group -m-2 flex items-center p-2">
                   <ShoppingBagIcon class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                     aria-hidden="true" />
-                  <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                  <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{{ $page.props.cart_count }}</span>
                   <span class="sr-only">items in cart, view bag</span>
                 </a>
               </div>
@@ -119,19 +119,17 @@
 </template>
 
 <script setup>
-import { ref, inject, computed } from 'vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { ref, inject } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
 import { Dialog, DialogPanel, PopoverGroup, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/vue/24/outline'
 
+
 const open = ref(false)
+
 const { toggleCart } = inject('cart')
 
-const user = computed(() => {
-  let user = usePage().props.value.auth.user
-  return user != null ? user.data : null
-})
 
 const navigation = {
   pages: [
@@ -141,6 +139,10 @@ const navigation = {
     { name: 'Cart', href: '/cart' },
   ]
 }
+
+
+
+
 
 
 

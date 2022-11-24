@@ -288,7 +288,6 @@ const filters = [
 ]
 
 
-
 const mobileFiltersOpen = ref(false)
 const SortTitle = ref('Sort')
 const loadingMoreProducts = ref(false)

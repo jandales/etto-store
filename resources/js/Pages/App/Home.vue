@@ -6,6 +6,7 @@
     </AppLayout>
 </template>
 
+
 <script setup>
 // Layouts
 import AppLayout from '@/Shared/Layouts/App.vue';
@@ -13,6 +14,7 @@ import AppLayout from '@/Shared/Layouts/App.vue';
 import Collection from '@/Shared/components/collection/Collection.vue'
 import Carousell from '@/Shared/components/carousell/Carousell.vue'
 import Hero from '@/Shared/components/hero/Hero.vue';
+
 
 defineProps({
     collection: Array,

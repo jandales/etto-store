@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Inertia\Middleware;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Services\Web\CartServices;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -45,6 +46,8 @@ class HandleInertiaRequests extends Middleware
             'auth.user' => fn () => $request->user()
                 ? UserResource::make($request->user())
                 : null,
+
+            'cart_count' => fn () => (new CartServices)->getCartCount() ??  0,
 
             'status' => [
                 'success' => fn () => $request->session()->get('success'),
