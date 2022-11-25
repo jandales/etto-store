@@ -47,4 +47,14 @@ class Address extends Model
             foreignKey: 'user_id'
         );
     }
+
+    public function fullName()
+    {
+        return $this->firstname . " " . $this->lastname;
+    }
+
+    public function fullAddress()
+    {
+        return $this->street . " " . $this->city . " " . $this->region . " " . $this->country;
+    }
 }

@@ -18,5 +18,11 @@ class OrderServices {
 
     }
 
+    public function get(Order $order)
+    {
+        $order->load(['items', 'items.product', 'billing', 'shipping', 'shippingMethod', 'payment']);
+        return $order;
+    }
+
     
 }

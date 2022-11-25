@@ -36,7 +36,7 @@ Route::get('/cookie/cart/store', CookieController::class);
 
 
 Route::get('/account/orders', OrderController::class);
-Route::get('/account/orders/details', ShowOrderController::class);
+Route::get('/account/orders/{order:number}/show', ShowOrderController::class);
 Route::get('/product/{product:uuid}', ShowProductController::class);
 
 require(__DIR__ . './app/guest.php');

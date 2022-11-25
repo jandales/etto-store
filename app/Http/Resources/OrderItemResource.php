@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Action\Currency;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderItemResource extends JsonResource
@@ -15,6 +16,7 @@ class OrderItemResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'order_id' => $this->order_id,
             'product' => [                
                 'uuid' => $this->whenLoaded('product')->uuid,
@@ -26,7 +28,8 @@ class OrderItemResource extends JsonResource
                 ],                
             ],
             'qty' => $this->qty,
-            'price' => $this->price,
+            'price' => Currency::format($this->price),
+            'total' => Currency::format($this->total()),
             'properties' => $this->properties,
         ];
     }

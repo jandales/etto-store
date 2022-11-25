@@ -69,7 +69,11 @@ class Order extends Model
     }
     public function payment()
     {
-        return $this->hasOne(OrderPayment::class);
+        return $this->hasOne(
+            related : Payment::class, 
+            foreignKey : 'reference_number',
+            localKey : 'number'
+        );
     }
 
     public function billing()
@@ -101,7 +105,8 @@ class Order extends Model
     {
         return $this->hasOne(
             related :ShippingMethod::class, 
-            foreignKey: 'shipping_method_id'
+            foreignKey: 'id',
+            localKey : 'shipping_method_id',
         );
     }
 

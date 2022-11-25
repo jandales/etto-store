@@ -20,8 +20,8 @@
 
           <div class="flex items-center justify-between">
             <div class="text-sm">
-              <a href="/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your
-                password?</a>
+              <Link href="/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your
+                password?</Link>
             </div>
           </div>
 
@@ -29,6 +29,7 @@
             <BaseButton :disabled="form.processing">
               Sign in
             </BaseButton>
+            <Link href="/register" class="mt-4 text-center text-sm block font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Create account</Link>
           </div>
         </form>
       </div>
@@ -38,7 +39,7 @@
 </template>
   
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/inertia-vue3';
 
 import AppLayout from '@/Shared/Layouts/App.vue'
 import BaseButton from '@/Shared/Base/BaseButton.vue'
