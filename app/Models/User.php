@@ -17,7 +17,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuid;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -84,13 +87,13 @@ class User extends Authenticatable
     }
 
 
-    public function defaultShipping()
+    public function shipping()
     {
-        return $this->address->where('shipping', 1);
+        return $this->address->where('shipping', 1)->first();
     }
 
-    public function defaultBilling()
+    public function billing()
     {
-        return $this->address->where('billing', 1);
+        return $this->address->where('billing', 1)->first();
     }
 }

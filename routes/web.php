@@ -6,7 +6,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\Web\App\CookieController;
-
+use App\Http\Controllers\Web\App\ShowProductController;
+use App\Http\Controllers\Web\App\Orders\OrderController;
+use App\Http\Controllers\Web\App\Orders\ShowOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,14 +35,9 @@ Route::get('/contact', function () {
 Route::get('/cookie/cart/store', CookieController::class);
 
 
-Route::get('/account/orders', function () {
-
-    return Inertia::render('App/Accounts/Orders/Index');
-});
-
-Route::get('/account/orders/details', function () {
-    return Inertia::render('App/Accounts/Orders/Details');
-});
+Route::get('/account/orders', OrderController::class);
+Route::get('/account/orders/details', ShowOrderController::class);
+Route::get('/product/{product:uuid}', ShowProductController::class);
 
 require(__DIR__ . './app/guest.php');
 

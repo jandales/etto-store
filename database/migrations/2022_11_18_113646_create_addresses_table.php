@@ -27,6 +27,7 @@ return new class extends Migration
             $table->boolean('billing')->default(false);
             $table->boolean('shipping')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

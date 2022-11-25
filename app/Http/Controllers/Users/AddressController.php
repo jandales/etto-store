@@ -63,9 +63,14 @@ class AddressController extends Controller
     public function shipping(Address $address)
     {
 
-        $currentShipping = auth()->user()->defaultShipping()->first();
-        $currentShipping->shipping = 0;
-        $currentShipping->save();
+        $currentShipping = auth()->user()->shipping();
+
+        if ($currentShipping)
+        {
+            $currentShipping->shipping = 0;
+            $currentShipping->save();
+        }
+ 
 
         $address->shipping = 1;
         $address->save();
@@ -78,9 +83,14 @@ class AddressController extends Controller
 
     public function billing(Address $address)
     {
-        $currentBilling = auth()->user()->defaultBilling()->first();
-        $currentBilling->billing = 0;
-        $currentBilling->save();
+        $currentBilling = auth()->user()->billing();
+
+        if($currentBilling){
+            $currentBilling->billing = 0;
+            $currentBilling->save();
+        }
+
+    
 
         $address->billing = 1;
         $address->save();

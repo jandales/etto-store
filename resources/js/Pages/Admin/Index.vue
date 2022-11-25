@@ -66,6 +66,8 @@ import Pagination from '@/Shared/Pagination/Pagination.vue';
 import BaseSearch from '@/Shared/Base/BaseSearch.vue'
 import Filter from '@/Shared/Filter/Filter.vue'
 
+
+
 const addresses = [
     {
         label: 'home',
