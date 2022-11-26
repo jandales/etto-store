@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Products;
 
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\ReviewResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -32,7 +33,8 @@ class ProductResource extends JsonResource
             'featured' => $this->featured,
             'link' =>  url("/collections/{$this->whenLoaded('category')->slug}/{$this->slug}"),
             'category' => ProductCategoryResource::make($this->whenLoaded('category')),
-            'images' => ImageResource::collection($this->whenLoaded('images')),    
+            'images' => ImageResource::collection($this->whenLoaded('images')),   
+            'reviews' => ReviewResource::collection($this->whenLoaded('reviews')), 
         ];
     }
 }

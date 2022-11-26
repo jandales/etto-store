@@ -32,6 +32,8 @@
                     <img :src="image.src" :alt="image.alt" class="w-full h-full object-cover object-center"> 
                   </div>
             </div>
+
+       
          
         </div>  
         <!-- Options -->
@@ -39,28 +41,34 @@
           <ProductTitle :product="product" /> 
           <!-- Reviews -->
           <ProductReviews :reviews="reviews" :ratings="[0, 1, 2, 3, 4]"  />  
-            <form @submit.prevent="handleAddToCart" class="mt-10">
-              <!-- Colors -->              
-                <ProductColor :colors="product.colors" @click="handleSelectedColor" />  
-                <!-- Sizes -->
-                <ProductSize @click="handleSelectedSized" :sizes="product.sizes" /> 
-                <!-- <CartQty class="mt-12" v-model="form.qty"></CartQty> -->
-              <button  type="submit" class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add to bag</button>
-            </form>
-            <div class="py-10 lg:col-span-2 lg:col-start-1  lg:pt-6 ">
 
-            <!-- Description and details -->
-            <ProductDescription :description="product.description " />
-        
-            <ProductHighlist :highlights="product.highlights" />
+          <form @submit.prevent="handleAddToCart" class="mt-10">
+            <!-- Colors -->              
+              <ProductColor :colors="product.colors" @click="handleSelectedColor" />  
+              <!-- Sizes -->
+              <ProductSize @click="handleSelectedSized" :sizes="product.sizes" /> 
+              <!-- <CartQty class="mt-12" v-model="form.qty"></CartQty> -->
+            <button  type="submit" class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add to bag</button>
+          </form>
+          
+          <div class="py-10 lg:col-span-2 lg:col-start-1  lg:pt-6 ">
 
-            <ProductDetails :details="product.details" />
+          <!-- Description and details -->
+          <ProductDescription :description="product.description " />
+      
+          <ProductHighlist :highlights="product.highlights" />
+
+          <ProductDetails :details="product.details" />
             
             </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="p-4">
+      <ReviewList :reviews="product.reviews" />
+  </div>
+   
 </AppLayout>
 </template>
   
@@ -79,6 +87,8 @@ import ProductDetails from '@/Shared/components/product/ProductDetails.vue'
 import ProductReviews from '@/Shared/components/product/ProductReviews.vue'
 import ProductImageGallary from '@/Shared/components/product/ProductImageGallary.vue'
 import CartQty from '@/Shared/components/cart/CartQty.vue'
+
+import ReviewList from '@/Shared/Reviews/ReviewList.vue';
 
 import { PlusIcon, MinusIcon, } from '@heroicons/vue/20/solid'
 

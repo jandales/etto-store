@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Builder\ProductBuilder;
 use Domains\Shared\Concerns\HasUuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Builder\ProductBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -67,6 +67,22 @@ class Product extends Model
         );
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(
+            related: Review::class,
+            foreignKey: 'product_id',
+        );
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(
+            related: Comment::class,
+            name: 'commentable'
+        );
+    }
+
     public function scopeFeatured($query)
     {
         return $query->where('featured', 1);
@@ -76,5 +92,19 @@ class Product extends Model
     {
         return new ProductBuilder($query);
     }
+
+    public function scopeCreateReview($query)
+    {
+        $query->each(function($item) {
+            $item->reviews()->create([
+                'comment' => 'my first Comment',
+                'rate' => rand(1,5),
+                'product_id' => $item->id,
+                'user_id' => auth()->user()->id ?? 1,
+            ]);
+        });
+    }
+
+ 
 
 }

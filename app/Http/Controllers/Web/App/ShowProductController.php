@@ -13,6 +13,8 @@ class ShowProductController extends Controller
 {
     public function __invoke(Product $product, ProductServices $services)
     {
+
+    
         return Inertia::render('App/Show', [
             'product' => ProductResource::make($services->get($product)),
         ]);
