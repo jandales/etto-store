@@ -4,9 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CartNotFoundException extends Exception
+class ReviewNotFoundException extends Exception
 {
-     /**
+    /**
      * Render the exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request

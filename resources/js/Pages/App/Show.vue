@@ -40,7 +40,7 @@
         <div class="mt-4 lg:row-span-3 lg:mt-0">           
           <ProductTitle :product="product" /> 
           <!-- Reviews -->
-          <ProductReviews :reviews="reviews" :ratings="[0, 1, 2, 3, 4]"  />  
+          <ProductReviews :reviews="{ href: '#', average: 4, totalCount: 117 }" :ratings="[0, 1, 2, 3, 4]"  />  
 
           <form @submit.prevent="handleAddToCart" class="mt-10">
             <!-- Colors -->              
@@ -66,7 +66,7 @@
     </div>
   </div>
   <div class="p-4">
-      <ReviewList :reviews="product.reviews" />
+      <ReviewList :reviews="product.reviews" :product_uuid="product.uuid" />
   </div>
    
 </AppLayout>
@@ -109,10 +109,10 @@ const  props = defineProps({
 
 
 
-const { id, name, regular_price, short_description, long_description, images, category } = props.product.data;
+const { id, name, regular_price, short_description, long_description, images, category, reviews, uuid } = props.product.data;
 
 const form = useForm({
-  product_id: null,
+  product_id: null, 
   qty: 1,
   properties: [
     { name : 'color', value : '' },
@@ -122,7 +122,8 @@ const form = useForm({
 
 
 const product = ref({
-  id : id,
+  id: id,
+  uuid: uuid,
   name: name,
   price: `$${regular_price}`,
   href: '#',
@@ -155,10 +156,11 @@ const product = ref({
     'Ultra-soft 100% cotton',
   ],
 
-  details: long_description
+  details: long_description,
+  reviews : reviews
     
 })
-const reviews = { href: '#', average: 4, totalCount: 117 }
+
 
 const handleSelectedSized = (value) => {
   form.properties[1].value = value;

@@ -24,7 +24,7 @@
                                                     alt="" />
                                             </div>
                                             <div class="flex-1">
-                                                <label href="">Jesus Andales</label>
+                                                <label>{{ $page.props.auth.user.data.display_name }}</label>
                                             </div>
                                     </div>
 
@@ -36,8 +36,8 @@
                                                 <div class="flex items-center">
                                                     <h4 class="mr-4">Rate : </h4>
                                                     <StarIcon v-for="index in rate_length" :key="index"
-                                                        @click="rate = index"
-                                                        :class="[rate >= index ? 'text-yellow-500' : 'text-gray-200', 'h-6 w-6 flex-shrink-0']"
+                                                        @click="form.rate = index"
+                                                        :class="[form.rate >= index ? 'text-yellow-500' : 'text-gray-200', 'h-6 w-6 flex-shrink-0']"
                                                         aria-hidden="true" />
                                                 </div>
                                             </div>
@@ -45,7 +45,7 @@
 
                                         <div class="mt-4">
                                             <label class="block mb-2">Review</label>
-                                            <textarea name="review" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Type your message here"  rows="3">
+                                            <textarea v-model="form.body" name="review" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Type your message here"  rows="3">
                                             </textarea>
                                         </div>
 
@@ -70,29 +70,64 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { useForm, usePage } from  '@inertiajs/inertia-vue3'
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { StarIcon } from '@heroicons/vue/20/solid'
+import  axios  from 'axios';
 
 const rate_length = ref([1, 2, 3, 4, 5])
-const rate = ref(1);
 
 const props = defineProps({
     state: {
         type: Boolean, 
         default : false,
-    }
+    },
+    product_uuid : {
+        type: String,
+        default: null,
+        required : true,
+    }    
 })
 
-
-
-const handleSubmit = () => {
-
-}
+const form = useForm({
+    rate: 1,
+    body : null,
+})
 
 const emits = defineEmits(['close']);
 
 const close = () => {
     emits('close')
 }
+
+
+const isOpen = computed(() => {
+    return props.state;
+})
+
+const handleSubmit = () => {
+
+    form.post(`/review/${props.product_uuid}/store`)
+    const { status } = usePage().props.value
+    if (status.success = true) {
+        emits('close');
+    }
+}
+
+const handleGetUserReview = async () => {
+    const { auth } = usePage().props.value
+    const res = await axios.get(`/review/user/${auth.user.data.id}/show`)
+    const { data } = res.data;
+    form.rate = data.rate ?? 1
+    form.body = data.body ?? null
+}
+
+watch(isOpen, value => {
+    if (value === false) return;
+        handleGetUserReview();
+});
+
+
+
 
 </script>

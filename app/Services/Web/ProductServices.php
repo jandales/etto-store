@@ -29,7 +29,7 @@ class ProductServices
     public function get(Product $product) {
         $product->load('category');
         $product->load('images');
-        $product->load('reviews');
+        $product->load(['reviews', 'reviews.user']);    
         return $product;
     }
 

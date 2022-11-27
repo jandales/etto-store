@@ -17,6 +17,7 @@ class UserResource extends JsonResource
         $profile = $this->load('profile')->profile;
 
         return [
+            'uuid' => $this->uuid,
             'id' => $this->id,
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,

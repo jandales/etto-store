@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReviewResource extends JsonResource
@@ -14,10 +15,13 @@ class ReviewResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'uuid' => $this->uuid,
-            'comment' => $this->uuid,
+            'body' => $this->body,
             'rate' => $this->rate,
+            'date' =>  $this->created_at->format('m/d/Y'),
+            'user' => UserResource::make($this->whenLoaded('user')),
         ];
     }
 }
