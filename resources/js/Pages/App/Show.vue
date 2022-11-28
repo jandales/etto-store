@@ -40,7 +40,7 @@
         <div class="mt-4 lg:row-span-3 lg:mt-0">           
           <ProductTitle :product="product" /> 
           <!-- Reviews -->
-          <ProductReviews :reviews="{ href: '#', average: 4, totalCount: 117 }" :ratings="[0, 1, 2, 3, 4]"  />  
+          <ProductReviews :reviews="{ href: '#', average: ratings.average, totalCount: ratings.total_reviews }" :ratings="[0, 1, 2, 3, 4]"  />  
 
           <form @submit.prevent="handleAddToCart" class="mt-10">
             <!-- Colors -->              
@@ -66,7 +66,7 @@
     </div>
   </div>
   <div class="p-4">
-      <ReviewList :reviews="product.reviews" :product_uuid="product.uuid" />
+      <ReviewList :ratings="ratings" :reviews="product.reviews" :product_uuid="product.uuid" />
   </div>
    
 </AppLayout>
@@ -88,6 +88,8 @@ import ProductReviews from '@/Shared/components/product/ProductReviews.vue'
 import ProductImageGallary from '@/Shared/components/product/ProductImageGallary.vue'
 import CartQty from '@/Shared/components/cart/CartQty.vue'
 
+
+
 import ReviewList from '@/Shared/Reviews/ReviewList.vue';
 
 import { PlusIcon, MinusIcon, } from '@heroicons/vue/20/solid'
@@ -96,6 +98,7 @@ const Alert = defineAsyncComponent(() => import('@/shared/Alerts/Alert.vue'))
 
 const  props = defineProps({
   product: Object,
+  ratings : Array,
   status: {
     type: Object,
     default: {

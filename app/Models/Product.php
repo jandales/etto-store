@@ -105,6 +105,23 @@ class Product extends Model
         });
     }
 
+
+    public function totalReviews()
+    {
+        return $this->reviews->count();
+    }
+
+    public function ratings()
+    {
+        
+        $this->reviews
+            ->selectRaw('count(*) as total, rate')
+            ->orderBy('rate', 'desc')
+            ->groupBy('rate')
+            ->get();  
+       
+    }
+
  
 
 }

@@ -62,5 +62,83 @@ class ReviewServices
         $this->review->save();
         return $this->review;
     }
+
+    public function getProductRatings($id)
+    {
+       $total_review =  Review::where('product_id', $id)->get()->count();
+
+       $ratings = Review::where('product_id', $id)
+            ->selectRaw('count(*) as total, rate')
+            ->orderBy('rate', 'desc')
+            ->groupBy('rate')
+            ->get();
+
+        $new_ratings = Self::setRating($ratings, $total_review);
+
+        $average = self::getAverage($ratings, $total_review);
+       
+
+        return [
+            'average' => $average,
+            'total_reviews' =>  $total_review,
+            'ratings' => $new_ratings,
+        ];
+
+       
+    }
+
+    private function setRating($ratings, int $total_review)
+    {
+        $average = 0;
+
+        $new_ratings =  $ratings->map(function ($item) use ($total_review, $average) { 
+            $average = ($item->total / $total_review)  * 100;
+            $rating = [
+                'rate' => $item->rate,
+                'average' => ceil($average) . '%',
+            ];
+            return $rating;
+        });
+
+        $rates = [5,4,3,2,1];
+        
+        foreach ($rates as $rate) {
+            $result = $new_ratings->contains(function ($item) use ($rate) {            
+                return $item['rate'] == $rate;  
+            });
+            if ($result === false) {
+                $new_ratings->push([
+                    'rate' => $rate,
+                    'average' =>  '0%'
+                ]);    
+            }
+        }
+
+        return $new_ratings;
+        
+    }
+
+    private function getAverage($ratings, int $total_review)
+    {
+        $average = 0;
+        
+        foreach ($ratings as $item) {
+
+            $average += $item->total * $item->rate;
+
+        }
+
+        $average /=  $total_review;
+
+        $average  = floor($average);  
+
+        return $average;
+    }
+
+
+
+
+
+ 
     
 }

@@ -17,7 +17,10 @@ class ReviewFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'product_id' => 1,
+            'user_id' => rand(3,200),
+            'rate' => rand(1,5),
+            'body' => fake()->paragraph(),
         ];
     }
 }
