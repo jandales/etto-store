@@ -1,6 +1,4 @@
 <?php
-
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
@@ -12,7 +10,8 @@ use App\Http\Controllers\Web\App\Review\StoreController;
 use App\Http\Controllers\Web\App\Orders\ShowOrderController;
 use App\Http\Controllers\Web\App\Review\ShowReviewController;
 use App\Http\Controllers\Web\App\Review\DestroyReviewController;
-
+use App\Http\Controllers\Web\App\Review\LoadMoreReviewController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +24,9 @@ use App\Http\Controllers\Web\App\Review\DestroyReviewController;
 |
 */
 
+Route::get('/test', function() {
+    return Inertia::render('App');
+});
 
 Route::get('/', HomeController::class);
 
@@ -33,7 +35,7 @@ Route::get('/collections/{category:slug?}', ShopController::class);
 Route::get('/collections/{category:slug}/{product:slug}', ShowController::class);
 
 Route::get('/contact', function () {
-    return Inertia::render('App/Contact');
+    // return Inertia::render('App/Contact');
 });
 
 Route::get('/cookie/cart/store', CookieController::class);
@@ -45,7 +47,7 @@ Route::get('/product/{product:uuid}', ShowProductController::class);
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/review/{product:uuid}/store', StoreController::class);
     Route::delete('/review/{review:uuid}/destroy', DestroyReviewController::class);
-    Route::get('/review/user/{review:user_id}/show', ShowReviewController::class);
+    Route::get('/review/user/{review:user_id}/show', ShowReviewController::class); 
 });
 
 

@@ -4,11 +4,12 @@ namespace App\Http\Middleware;
 
 use Inertia\Middleware;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 use App\Services\Web\CartServices;
+use App\Http\Resources\UserResource;
 
 class HandleInertiaRequests extends Middleware
 {
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -46,7 +47,7 @@ class HandleInertiaRequests extends Middleware
             'auth.user' => fn () => $request->user()
                 ? UserResource::make($request->user())
                 : null,
-
+                
             'cart_count' => fn () => (new CartServices)->getCartCount() ??  0,
 
             'status' => [
@@ -54,6 +55,9 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
                 'message' => fn () => $request->session()->get('message')
             ],
+
+            
+           
         ]);
     }
 }

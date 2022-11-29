@@ -13,8 +13,7 @@ class UserResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
-        $profile = $this->load('profile')->profile;
+    {      
 
         return [
             'uuid' => $this->uuid,
@@ -23,9 +22,9 @@ class UserResource extends JsonResource
             'lastname' => $this->lastname,
             'display_name' => $this->fullName(),
             'email' => $this->email,
-            'avatar' => $profile->avatar ?? null,
-            'birth_date' => $profile->birth_date ?? null,
-            'phone' => $profile->phone ?? null,
+            'avatar' => $this->whenLoaded('profile')->avatar ?? null,
+            'birth_date' =>$this->whenLoaded('profile')->birth_date ?? null,
+            'phone' => $this->whenLoaded('profile')->phone ?? null,
         ];
     }
 }

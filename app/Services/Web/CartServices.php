@@ -21,7 +21,7 @@ class CartServices
         try {
             Self::find($cart);
         } catch (CartNotFoundException $e) {
-            return abort($e->getMessage(), $e);
+             abort($e->getMessage(), $e);
         }
 
         Self::createCart($cart);
@@ -41,10 +41,12 @@ class CartServices
     private function find($cart_id)
     {
         
-        $this->cart = Cart::where('cart_id', $cart_id)->firstOrFail(); 
+        $this->cart = Cart::where('cart_id', $cart_id)->first(); 
 
-        if (!$this->cart) {
+        if ($this->cart == null) {
+
            throw new CartNotFoundException('Cart not found', 422);
+
         } 
               
     }
@@ -113,9 +115,13 @@ class CartServices
     public function getCartCount()
     {        
         $total = 0;
+        
+        if ($this->cart->items->count() == 0) return $total;
+
         foreach($this->cart->items as $item) {
             $total += $item->qty;
         }
+
         return $total;
     }
 

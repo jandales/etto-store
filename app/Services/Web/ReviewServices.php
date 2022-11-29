@@ -63,6 +63,15 @@ class ReviewServices
         return $this->review;
     }
 
+
+    public function getProductReviews($id)
+    {
+        return Review::with('user', 'user.profile')
+            ->where('product_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    }
+    
     public function getProductRatings($id)
     {
        $total_review =  Review::where('product_id', $id)->get()->count();

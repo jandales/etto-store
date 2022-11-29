@@ -12,7 +12,9 @@ class UpdateCartController extends Controller
     {
     
         try {
+
             $cartServices->updateItemQuantity($id, $request->qty);
+            
             return back()->with([
                 'status' => [
                     'message' => 'successfully Updated',

@@ -18,6 +18,7 @@ class ReviewResource extends JsonResource
 
         return [
             'uuid' => $this->uuid,
+            'product_id' => $this->product_id,
             'body' => $this->body,
             'rate' => $this->rate,
             'date' =>  $this->created_at->format('m/d/Y'),

@@ -66,7 +66,7 @@
     </div>
   </div>
   <div class="p-4">
-      <ReviewList :ratings="ratings" :reviews="product.reviews" :product_uuid="product.uuid" />
+      <ReviewList :ratings="ratings" :reviews="reviews" :product_uuid="product.uuid"/>
   </div>
    
 </AppLayout>
@@ -98,7 +98,8 @@ const Alert = defineAsyncComponent(() => import('@/shared/Alerts/Alert.vue'))
 
 const  props = defineProps({
   product: Object,
-  ratings : Array,
+  reviews : Object,
+  ratings : Object,
   status: {
     type: Object,
     default: {
@@ -112,7 +113,7 @@ const  props = defineProps({
 
 
 
-const { id, name, regular_price, short_description, long_description, images, category, reviews, uuid } = props.product.data;
+const { id, name, regular_price, short_description, long_description, images, category, uuid } = props.product.data;
 
 const form = useForm({
   product_id: null, 
@@ -160,7 +161,6 @@ const product = ref({
   ],
 
   details: long_description,
-  reviews : reviews
     
 })
 

@@ -10,9 +10,11 @@
                             <div class="flex justify-between">
                                 <TextContent :type="tag.label" class="block text-gray-900 font-semibold">{{ review.user.display_name }}
                                 </TextContent>
-                                <TextContent :type="tag.label"
+                                <TextContent 
+                                    :type="tag.label"
                                     v-if="$page.props.auth.user && review.user.uuid == $page.props.auth.user.data?.uuid"
-                                    @click="destroy(review.uuid)" class="text-rose-400 cursor-pointer hover:text-rose-700">Delete
+                                    @click="handleDestroy(review.uuid)"
+                                    class="text-rose-400 cursor-pointer hover:text-rose-700">Delete
                                 </TextContent>
                             </div>
                             <TextContent :type="tag.label" class="block text-gray-500">{{ review.date }}</TextContent>
@@ -37,5 +39,13 @@ defineProps({
     count: Number,
     index: Number,
 })
+
+const emits = defineEmits(['delete'])
+
+const handleDestroy = (id) => {
+    emits('delete', id);
+}
+
+
 
 </script>

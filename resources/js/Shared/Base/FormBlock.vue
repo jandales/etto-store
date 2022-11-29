@@ -6,7 +6,7 @@
         :name="name" 
         :type="type" 
         :autocomplete="name" 
-        v-model="modelValue" 
+        :value="modelValue" 
         :disabled="disabled"
         :placeholder="placeholder"
         @input="updateInput"

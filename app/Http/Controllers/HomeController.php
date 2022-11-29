@@ -9,12 +9,15 @@ use App\Action\CookieAction;
 
 class HomeController extends Controller
 {
-    public function __invoke(CookieAction $cookie)
-    {    
-        return Inertia::render('App/Home', [
+    public function __invoke()
+    {
+        return Inertia::render(
+            'App/Home',
+            [
                 'collection' => Category::all(),
-                'featured_products' => Product::Featured()->limit(4)->get(),               
+                'featured_products' => Product::Featured()->limit(4)->get(),
             ]
         );
     }
+ 
 }
