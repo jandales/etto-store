@@ -14,15 +14,13 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-
 import { onMounted } from 'vue';
 import axios  from 'axios';
-import Navigation from '../components/Navigation.vue';
-import Footer from '../components/Footer.vue';
-import Cart from '../components/Cart.vue';
+import Navigation from '@/Shared/Navigation/Navigation.vue';
+import Footer from '@/Shared/components/Footer.vue';
+import Cart from '@/Shared/components/Cart.vue';
 
 import { ref, provide } from 'vue';
 
 const cartState = ref(false);
-
-
 
 provide('cart', {
     cartState,

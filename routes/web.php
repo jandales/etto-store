@@ -10,7 +10,6 @@ use App\Http\Controllers\Web\App\Review\StoreController;
 use App\Http\Controllers\Web\App\Orders\ShowOrderController;
 use App\Http\Controllers\Web\App\Review\ShowReviewController;
 use App\Http\Controllers\Web\App\Review\DestroyReviewController;
-use App\Http\Controllers\Web\App\Review\LoadMoreReviewController;
 use Inertia\Inertia;
 
 /*
@@ -35,7 +34,7 @@ Route::get('/collections/{category:slug?}', ShopController::class);
 Route::get('/collections/{category:slug}/{product:slug}', ShowController::class);
 
 Route::get('/contact', function () {
-    // return Inertia::render('App/Contact');
+    return Inertia::render('App/Contact');
 });
 
 Route::get('/cookie/cart/store', CookieController::class);

@@ -9,17 +9,17 @@
     <div class="pt-6">   
       <nav aria-label="Breadcrumb">
         <ol role="list" class="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <li v-for="breadcrumb in product.breadcrumbs" :key="breadcrumb.id">
+          <List v-for="breadcrumb in product.breadcrumbs" :key="breadcrumb.id">
             <div class="flex items-center">
-              <a :href="breadcrumb.href" class="mr-2 text-sm font-medium text-gray-900">{{ breadcrumb.name }}</a>
+              <Link :href="breadcrumb.href" class="mr-2 text-sm font-medium text-gray-900">{{ breadcrumb.name }}</Link>
               <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-4 text-gray-300">
                 <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
               </svg>
             </div>
-          </li>
-          <li class="text-sm">
-            <a :href="product.href" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600">{{ product.name }}</a>
-          </li>
+          </List>
+          <List class="text-sm">
+            <Link :href="product.href" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600">{{ product.name }}</Link>
+          </List >
         </ol>
       </nav>   
 
@@ -31,16 +31,17 @@
                   <div v-for="image in product.images" class="w-1/2 aspect-square">
                     <img :src="image.src" :alt="image.alt" class="w-full h-full object-cover object-center"> 
                   </div>
-            </div>
-
-       
+            </div>     
          
         </div>  
         <!-- Options -->
         <div class="mt-4 lg:row-span-3 lg:mt-0">           
           <ProductTitle :product="product" /> 
           <!-- Reviews -->
-          <ProductReviews :reviews="{ href: '#', average: ratings.average, totalCount: ratings.total_reviews }" :ratings="[0, 1, 2, 3, 4]"  />  
+            <ProductReviews 
+              :reviews="{  average: ratings.average, totalCount: ratings.total_reviews }" 
+               
+            />  
 
           <form @submit.prevent="handleAddToCart" class="mt-10">
             <!-- Colors -->              
@@ -65,8 +66,13 @@
       </div>
     </div>
   </div>
+
   <div class="p-4">
-      <ReviewList :ratings="ratings" :reviews="reviews" :product_uuid="product.uuid"/>
+      <ReviewList 
+          :ratings="ratings" 
+          :reviews="reviews" 
+          :product_uuid="product.uuid"
+      />
   </div>
    
 </AppLayout>
@@ -74,10 +80,11 @@
   
 <script setup>
 import { ref, defineAsyncComponent } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm, Link } from '@inertiajs/inertia-vue3'
 // layouts
 import AppLayout from '@/Shared/Layouts/App.vue'
 //components
+import List from '@/Shared/List';
 import ProductTitle from '@/Shared/components/product/ProductTitle.vue'
 import ProductColor from '@/Shared/components/product/ProdutColor.vue'
 import ProductSize from '@/Shared/components/product/ProductSize.vue'

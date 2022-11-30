@@ -16,22 +16,25 @@ class CartServices
 
     public function __construct()
     {
-        $cart = Cookie::get('cart-id');        
+        
+        $cart_id = Cookie::get('cart-id'); 
 
         try {
-            Self::find($cart);
+            Self::find($cart_id);  
+          
         } catch (CartNotFoundException $e) {
-             abort($e->getMessage(), $e);
+            Self::createCart($cart_id);           
+
         }
 
-        Self::createCart($cart);
        
     }
 
     public function createCart($cart)
     {
-        if (!is_null($cart))  return;
-
+     
+        if (!is_null($this->cart) === true)  return;
+    
         Cart::create([
             'cart_id' => $cart,
             'expired_at' =>  now()->addDays(5),
@@ -53,6 +56,7 @@ class CartServices
 
     public function itemExist($product_id)
     {   
+
         $item = $this->cart->items->where('product_id', $product_id)->first();
 
         if ($item) {
@@ -115,8 +119,8 @@ class CartServices
     public function getCartCount()
     {        
         $total = 0;
-        
-        if ($this->cart->items->count() == 0) return $total;
+
+        if ($this->cart->items?->count() == 0) return $total;
 
         foreach($this->cart->items as $item) {
             $total += $item->qty;
