@@ -2,7 +2,8 @@
   <AppLayout>
      <PageWrapper>
         <PageTitle :title="title" />
-        <div v-if="items.length > 0" class="w-full pt-10 pb-16 lg:grid  lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-16 lg:pt-16 lg:pb-24">
+        <div v-if="items.length > 0" 
+            class="w-full pt-10 pb-16 lg:grid  lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-16 lg:pt-16 lg:pb-24">
           <div class="lg:col-span-2">
             <CartList :items="items" />
           </div>

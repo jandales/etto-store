@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\App\Review\StoreController;
 use App\Http\Controllers\Web\App\Orders\ShowOrderController;
 use App\Http\Controllers\Web\App\Review\ShowReviewController;
 use App\Http\Controllers\Web\App\Review\DestroyReviewController;
+use App\Http\Controllers\Web\App\SearchController;
 use Inertia\Inertia;
 
 /*
@@ -48,6 +49,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/review/{review:uuid}/destroy', DestroyReviewController::class);
     Route::get('/review/user/{review:user_id}/show', ShowReviewController::class); 
 });
+
+Route::get('/search', SearchController::class);
 
 
 require(__DIR__ . './app/guest.php');

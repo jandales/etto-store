@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+
 import CartImage from './CartImage.vue'
 import CartDetails from './CartDetails.vue'
 import CartQty from '../CartQty.vue';

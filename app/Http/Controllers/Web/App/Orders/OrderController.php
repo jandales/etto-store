@@ -12,8 +12,10 @@ class OrderController extends Controller
 {
     public function __invoke(Request $request, OrderServices $order)
     {
+        $status = $request->filter;
         return Inertia::render('App/Accounts/Orders/Index', [
-            'orders' => OrderResource::collection($order->getAll()),
+            'orders' => OrderResource::collection($order->getAll($status)),
+            'filter' => $status ?? 'all',
         ]);
     }
 

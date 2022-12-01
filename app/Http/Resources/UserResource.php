@@ -22,9 +22,9 @@ class UserResource extends JsonResource
             'lastname' => $this->lastname,
             'display_name' => $this->fullName(),
             'email' => $this->email,
-            'avatar' => $this->whenLoaded('profile')->avatar ?? null,
-            'birth_date' =>$this->whenLoaded('profile')->birth_date ?? null,
-            'phone' => $this->whenLoaded('profile')->phone ?? null,
+            'avatar' => $this->profile->avatar ?? null,
+            'birth_date' => $this->profile->birth_date ?? null,
+            'phone' => $this->profile->phone ?? null,
         ];
     }
 }

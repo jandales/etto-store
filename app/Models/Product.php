@@ -122,6 +122,12 @@ class Product extends Model
        
     }
 
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('name', 'like', '%' . $keyword . '%')
+            ->orWhere('slug', 'like', '%' . $keyword . '%');
+
+    }
  
 
 }

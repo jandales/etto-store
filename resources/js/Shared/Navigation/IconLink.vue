@@ -9,7 +9,7 @@
     
         <!-- Search -->
         <div class="flex lg:ml-2">
-            <a href="#" class="p-2 text-gray-400 hover:text-gray-500">
+            <a href="#" @click="$emit('show', true)" class="p-2 text-gray-400 hover:text-gray-500">
                 <span class="sr-only">Search</span>
                 <MagnifyingGlassIcon class="h-6 w-6" aria-hidden="true" />
             </a>
@@ -33,5 +33,8 @@ import { Link } from '@inertiajs/inertia-vue3'
 import { MagnifyingGlassIcon, ShoppingBagIcon,  UserIcon } from '@heroicons/vue/24/outline'
 
 const { toggleCart } = inject('cart')
+
+defineEmits(['show'])
+
 
 </script>

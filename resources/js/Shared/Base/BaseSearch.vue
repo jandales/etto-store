@@ -3,7 +3,7 @@
         class="group relative flex items-center w-72 rounded-md border shadow-sm  focus:outline-none   hover:ring-2 hover:ring-indigo-600">
         <MagnifyingGlassIcon class="h-5 w-5 text-gray-600  ml-4" />
         <input ref="input" @input="updateInput" :value="modelValue" type="text"
-            class="bg-transparent rounded-md px-2 w-full border-transparent  focus:border-transparent focus:ring-0"
+            class="bg-transparent flex-1 rounded-md px-2  border-transparent  focus:border-transparent focus:ring-0"
             placeholder="Search...">
         <label :class="[showClearIcon ? '' : 'hidden', 'ml-auto  mr-2 cursor-pointer']">
             <XMarkIcon @click="handleClearInput" class="h-4 w-4" />
@@ -26,7 +26,7 @@ const props = defineProps({
     },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'clear'])
 
 const updateInput = (event) => {
 
@@ -34,12 +34,13 @@ const updateInput = (event) => {
 
     showClearIcon.value = inputLength === 0 ? false : true;
 
-    emit("update:modelValue", event.target.value);
+    emits("update:modelValue", event.target.value);
 
 }
 
 const handleClearInput = () => {
     showClearIcon.value = false;
+    emits('clear');
     input.value.value = null;
 }
 

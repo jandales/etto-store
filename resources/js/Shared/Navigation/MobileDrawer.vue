@@ -16,7 +16,7 @@
                         <div class="flex px-4 pt-5 pb-2">
                             <button type="button"
                                 class="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
-                                @click="handleClose">
+                                @click="$emit('close')">
                                 <span class="sr-only">Close menu</span>
                                 <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                             </button>
@@ -64,11 +64,6 @@ const props = defineProps({
     state : Boolean,     
 })
 
-const emits = defineEmits([
-    'close'
-])
+defineEmits(['close'])
 
-const handleClose = () => {  
-    emits('close');
-}
 </script>

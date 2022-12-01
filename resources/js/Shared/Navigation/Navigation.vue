@@ -21,13 +21,16 @@
             <!-- Flyout menus -->
             <Links :links="navigation" />
             
-            <IconLink />
+            <IconLink @show="(openSearch = true)" />
           
           </div>
         </div>
       </nav>
+          <Search :show="openSearch" @close="openSearch = false"></Search>
     </header>
+
   </div>
+
   <slot></slot>
 </template>
 
@@ -41,10 +44,15 @@ import Logo from '@/Shared/Navigation/Logo.vue'
 import MobileDrawer from '@/Shared/Navigation/MobileDrawer.vue'
 import Links from '@/Shared/Navigation/Links.vue'
 import IconLink from '@/Shared/Navigation/IconLink.vue';
-
-
+import Search from '@/Shared/Navigation/Search.vue';
 
 const open = ref(false)
+const openSearch = ref(false)
+
+const handleSearch = (state) =>
+{
+  openSearch.value = state
+}
 
 const navigation = {
   pages: [
@@ -54,4 +62,6 @@ const navigation = {
     { name: 'Cart', href: '/cart' },
   ]
 }
+
+
 </script>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Users\AccountController;
 use App\Http\Controllers\Users\AddressController;
 use App\Http\Controllers\Users\Auth\LogoutController;
+use App\Http\Controllers\Users\UploadAvatarController;
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -24,5 +25,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/account/address/{address:id}/setShipping', [AddressController::class, 'shipping']);
         Route::put('/account/address/{address:id}/setBilling', [AddressController::class, 'billing']);
         Route::delete('/account/address/{address:id}/destroy', [AddressController::class, 'destroy']);
+        Route::post('/account/upload/avatar', UploadAvatarController::class);
     });
 });

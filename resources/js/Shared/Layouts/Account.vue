@@ -50,7 +50,7 @@
                         <li v-for="nav in navigation"
                             class="p-2 text-base rounded-md text-gray-900 hover:bg-indigo-500 hover:text-white">
                             <Link v-if="nav.name != 'Sign out'" :href="nav.href">{{ nav.name }}</Link>
-                            <Link v-else href="/logout" method="post">{{ nav.name }}</Link>
+                            <Link v-else href="/logout" method="post" as="button">{{ nav.name }}</Link>
                         </li>
                     </ul>
                 </div>

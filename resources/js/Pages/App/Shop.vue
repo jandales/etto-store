@@ -1,6 +1,9 @@
 
 <template>
   <AppLayout>
+    <div class="flex items-center justify-center bg-gray-500 h-80 w-full bg-[url('/public/img/shop.jpg')] bg-origin-content bg-cover bg-blend-hard-light">
+          <h1 class="text-5xl text-white font-bold tracking-widest">{{selected_category}}</h1>
+    </div>
     <div class="bg-white">
       <div>
         <!-- Mobile filter dialog -->

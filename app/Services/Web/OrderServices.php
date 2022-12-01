@@ -6,7 +6,7 @@ use App\Models\Order;
 
 class OrderServices {
 
-    public function getAll($status = null,)
+    public function getAll($status = null)
     {
         $user = auth()->user();
 
