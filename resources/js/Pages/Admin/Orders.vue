@@ -5,7 +5,7 @@
 
         <ul class="flex gap-10 mt-6 border-b">
             <li
-                :class="[pendingTab ? 'border-b-indigo-500 text-gray-9npm00' : 'border-b-transparent text-gray-500', 'border-b-4 py-4 cursor-pointer']">
+                :class="[pendingTab ? 'border-b-indigo-500 text-gray-9' : 'border-b-transparent text-gray-500', 'border-b-4 py-4 cursor-pointer']">
                 Pending
             </li>
             <li class="border-b-4 py-4 cursor-pointer  border-b-transparent text-gray-500">

@@ -1,6 +1,9 @@
 <?php
+
+use App\Http\Controllers\ContactUsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\Web\App\CookieController;
@@ -34,9 +37,10 @@ Route::get('/collections/{category:slug?}', ShopController::class);
 
 Route::get('/collections/{category:slug}/{product:slug}', ShowController::class);
 
-Route::get('/contact', function () {
-    return Inertia::render('App/Contact');
-});
+
+Route::get('/contact-us', ContactUsController::class);
+Route::post('/contact-us/send/message', MessageController::class);
+
 
 Route::get('/cookie/cart/store', CookieController::class);
 

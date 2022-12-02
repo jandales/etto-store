@@ -58,7 +58,7 @@ const navigation = {
   pages: [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/collections' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Contact', href: '/contact-us' },
     { name: 'Cart', href: '/cart' },
   ]
 }
