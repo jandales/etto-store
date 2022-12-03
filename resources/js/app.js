@@ -8,7 +8,6 @@ createInertiaApp({
     const match = comps[`./Pages/${name}.vue`];
     const page = (await import(/* @vite-ignore */ `${match.name}`)).default;
     return page;
-
   },
   setup({ el, App, props, plugin }) {
     createApp({ render: () => h(App, props) })

@@ -33,8 +33,7 @@
             </ul>
 
             <ul class="flex gap-4">
-                <li v-for="site in socialSites" :key="site.name">
-                   
+                <li v-for="site in socialSites" :key="site.name">                   
                     <a :href="site.href" class="text-indigo-500">                    
                         <svg xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 512 512" class="h-6 w-6 text-indigo-500"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->

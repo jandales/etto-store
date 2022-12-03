@@ -56,6 +56,11 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn () => $request->session()->get('message')
             ],
 
+            'currency' => [
+                'country' => 'PHP',
+                'sign' => '₱',
+            ],    
+
             
            
         ]);

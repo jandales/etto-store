@@ -1,10 +1,10 @@
-export default function useCurrency() {
+export default function useCurrency(currency = 'Php') {
 
     const currencyFormat = (amount) => {
         // Create our number formatter.
         const formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'PHP',        
+            currency: currency,        
         });
         
         return formatter.format(amount); /* $2,500.00 */

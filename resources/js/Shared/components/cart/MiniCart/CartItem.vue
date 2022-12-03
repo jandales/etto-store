@@ -1,6 +1,10 @@
 <template>
     <li  class="relative flex py-6">
-        <CartImage :src="item.product.image.src" :alt="item.product.image.alt"/>
+
+        <CartImage 
+            :src="item.product.image.src" 
+            :alt="item.product.image.alt"
+        />
     
         <div class="ml-4 flex flex-1 flex-col">
             <div>
@@ -29,6 +33,7 @@ import CartQty from '../CartQty.vue';
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import { computed, watch, defineAsyncComponent } from 'vue';
 const { cart } = usePage().props.value;
+
 const CartProccess = defineAsyncComponent(() => import('../CartProccess.vue'))
 
 const props = defineProps({

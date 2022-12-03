@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactUsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -55,6 +56,8 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/search', SearchController::class);
+
+Route::get('/checkout', CheckoutController::class);
 
 
 require(__DIR__ . './app/guest.php');
