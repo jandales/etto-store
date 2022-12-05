@@ -13,7 +13,7 @@
             <div class="flex-1">
                 <div class="w-full mb-12 pb-4">    
 
-                    <BaseButton>Paypal</BaseButton>
+                    <a :href="`/checkout/payment/paypal/proccess?amount=${total}&currency=PHP&shipping_method=${selected.id}&shipping_amount=${selected.amount}`">Paypal</a>
 
                     <div class="flex items-center gap-2 mt-4">
                         <div class="w-full border-b  h-fit"></div>
@@ -120,6 +120,7 @@
                 </div>
 
                 <div>
+
                     <h1 class="text-gray-900 font-semibold mb-4">Billing Information</h1>
                     <div class="mb-4">                        
                         <input type="checkbox" v-model="setBilling" name="billing" id="billing" checked class="mr-2">
@@ -154,38 +155,42 @@
             </div>
         
             <div class="w-1/2 px-8">
-                <h1 class="text-gray-900 font-semibold mb-4">Order Summery</h1>
-        
-                <CartList>
-                    <CartItem v-for="item in cart.items.data" :key="item.id" :item="item" />
-                </CartList>
-        
-                <div class="w-full mt-6 border-t">
-                    <ul class="border-b mt-6 mb-4">
-                        <li class="flex justify-between mb-4">
-                            <span class="text-gray-500 font-semibold">Subtotal</span>
-                            <span class="text-gray-900 font-semibold">{{ currencyFormat(subtotal) }}</span>
-                        </li>
-                        <li class="flex justify-between mb-4">
-                            <span class="text-gray-500 font-semibold">Shipping</span>
-                            <span class="text-gray-900 font-semibold">{{ currencyFormat(selected.amount) }}</span>
-                        </li>
-                        <li class="flex justify-between mb-4">
-                            <span class="text-gray-500 font-semibold">Discount</span>
-                            <span class="text-gray-900 font-semibold">{{ currencyFormat(discount) }}</span>
-                        </li>
-                        <li class="flex justify-between mb-4">
-                            <span class="text-gray-500 font-semibold">Taxes</span>
-                            <span class="text-gray-900 font-semibold">{{ currencyFormat(taxes) }}</span>
-                        </li>
-                    </ul>
-                    <div class="flex justify-between mb-4">
-                        <span class="text-gray-900 font-semibold text-lg">Total</span>
-                        <span class="text-gray-900 font-semibold text-lg">{{ currencyFormat(total) }}</span>
-                    </div>
+                <div class="sticky top-12">
+                    <h1 class="text-gray-900 font-semibold mb-4">Order Summery</h1>
+                            <CartList>
+                                <CartItem v-for="item in cart.items.data" :key="item.id" :item="item" />
+                            </CartList>
+                            
+                            <div class="w-full mt-6 border-t">
+                                <ul class="border-b mt-6 mb-4">
+                                    <li class="flex justify-between mb-4">
+                                        <span class="text-gray-500 font-semibold">Subtotal</span>
+                                        <span class="text-gray-900 font-semibold">{{ currencyFormat(subtotal) }}</span>
+                                    </li>
+                                    <li class="flex justify-between mb-4">
+                                        <span class="text-gray-500 font-semibold">Shipping</span>
+                                        <span class="text-gray-900 font-semibold">{{ currencyFormat(selected.amount) }}</span>
+                                    </li>
+                                    <li class="flex justify-between mb-4">
+                                        <span class="text-gray-500 font-semibold">Discount</span>
+                                        <span class="text-gray-900 font-semibold">{{ currencyFormat(discount) }}</span>
+                                    </li>
+                                    <li class="flex justify-between mb-4">
+                                        <span class="text-gray-500 font-semibold">Taxes</span>
+                                        <span class="text-gray-900 font-semibold">{{ currencyFormat(taxes) }}</span>
+                                    </li>
+                                </ul>
+                                <div class="flex justify-between mb-4">
+                                    <span class="text-gray-900 font-semibold text-lg">Total</span>
+                                    <span class="text-gray-900 font-semibold text-lg">{{ currencyFormat(total) }}</span>
+                                </div>
+                            </div>
+                            
+                            <BaseButton class="py-4">Place Order</BaseButton>
                 </div>
-
-                <BaseButton class="py-4">Place Order</BaseButton>
+              
+        
+        
         
             </div>
         
@@ -195,7 +200,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useForm, usePage } from  '@inertiajs/inertia-vue3'
+import { useForm, usePage, Link } from  '@inertiajs/inertia-vue3'
 
 import CartList from '@/Shared/components/cart/MiniCart/CartList.vue'
 import CartItem from '@/Shared/components/cart/MiniCart/CartItem.vue'
@@ -253,7 +258,7 @@ const total = ref(calculateTotal({
 const form = useForm({
 
     email: usePage().props.value.auth.user?.data.email ?? null,
-    
+
     shiiping_method: selected.value,
 
     shipping: {
@@ -296,4 +301,5 @@ watch(selected, value => {
     }); 
    
 })
+
 </script>

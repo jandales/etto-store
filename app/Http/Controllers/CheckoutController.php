@@ -13,7 +13,10 @@ class CheckoutController extends Controller
    
     public function __invoke(CartServices $cartServices)
     {
-      
+        $cart_items = $cartServices->getItems();
+
+        if ($cart_items->count() === 0) return redirect()->route('cart');
+        
         return Inertia::render('App/Checkout/Index', [
             'cart' =>  [
                 'items' => CartItemResource::collection($cartServices->getItems()),

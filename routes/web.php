@@ -1,21 +1,25 @@
 <?php
 
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ContactUsController;
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\Web\App\CookieController;
+use App\Http\Controllers\Web\App\SearchController;
 use App\Http\Controllers\Web\App\ShowProductController;
 use App\Http\Controllers\Web\App\Orders\OrderController;
 use App\Http\Controllers\Web\App\Review\StoreController;
 use App\Http\Controllers\Web\App\Orders\ShowOrderController;
 use App\Http\Controllers\Web\App\Review\ShowReviewController;
 use App\Http\Controllers\Web\App\Review\DestroyReviewController;
-use App\Http\Controllers\Web\App\SearchController;
-use Inertia\Inertia;
+use App\Http\Controllers\Web\Payments\CreateOrderController;
+use App\Http\Controllers\Web\Payments\Paypal\PaymentCancelController;
+use App\Http\Controllers\Web\Payments\Paypal\PaymentSuccessController;
+use App\Http\Controllers\Web\Payments\Paypal\PaymentProccessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +62,13 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/search', SearchController::class);
 
 Route::get('/checkout', CheckoutController::class);
+
+
+Route::get('/checkout/payment/paypal/proccess', PaymentProccessController::class)->name('paypal.process');
+Route::get('/checkout/payment/paypal/success', PaymentSuccessController::class)->name('paypal.success');
+Route::get('/checkout/payment/paypal/cancel',  PaymentCancelController::class)->name('paypal.cancel');
+
+Route::get('/checkout/completed/order/{order}', CreateOrderController::class)->name('checkout.completed');
 
 
 require(__DIR__ . './app/guest.php');

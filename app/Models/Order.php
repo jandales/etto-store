@@ -71,8 +71,8 @@ class Order extends Model
     {
         return $this->hasOne(
             related : Payment::class, 
-            foreignKey : 'reference_number',
-            localKey : 'number'
+            foreignKey : 'order_id',
+            localKey : 'id'
         );
     }
 

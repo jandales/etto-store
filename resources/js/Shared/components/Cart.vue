@@ -43,7 +43,7 @@
                     </div>
                     <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div class="mt-6">
-                      <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                      <Link href="/checkout" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</Link>
                     </div>
                     <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
                       <p>
@@ -74,6 +74,7 @@ import axios from 'axios'
 import useCurrency from '@/Composable/currency';
 import CartList from '@/Shared/components/cart/MiniCart/CartList.vue'
 import CartItem from '@/Shared/components/cart/MiniCart/CartItem.vue'
+import { Link } from '@inertiajs/inertia-vue3';
 
 const ClipLoader = defineAsyncComponent(() => import('@/Shared/ClipLoader.vue'));
 const { currencyFormat } = useCurrency();

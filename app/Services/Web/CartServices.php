@@ -111,6 +111,19 @@ class CartServices
         return $this->cart->items->load('product');
     }
 
+    public function deleteItems()
+    {
+        foreach($this->cart->items as $item)
+        {
+            $item->delete();
+        }
+        
+        $this->cart->total = 0;
+        $this->cart->discount = 0;
+        $this->cart->coupon_id = null;
+        $this->cart->save();
+    }
+
     public function getSubtotal()
     {
         return $this->cart->subtotal() ?? 0;

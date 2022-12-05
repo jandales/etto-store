@@ -17,7 +17,11 @@ class Payment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'uuid',
+        'uuid',    
+        'order_id',
+        'shipping_id',
+        'shipping_method_id',
+        'shipping_amount',
         'reference_number',
         'provider',
         'amount',    
