@@ -18,12 +18,13 @@ class CartServices
     {
         
         $cart_id = Cookie::get('cart-id'); 
-
+    
         try {
             Self::find($cart_id);  
           
         } catch (CartNotFoundException $e) {
-            Self::createCart($cart_id);           
+
+               
 
         }
 
@@ -133,7 +134,9 @@ class CartServices
     {        
         $total = 0;
 
-        if ($this->cart->items?->count() == 0) return $total;
+        if (isset($this->cart) == false ) return 0;
+
+        if ($this->cart->items?->count() == 0) return 0;
 
         foreach($this->cart->items as $item) {
             $total += $item->qty;

@@ -107,7 +107,10 @@
 
                 <div class="w-full  border-b mb-12 pb-6">
                     <h1 class="text-gray-900 font-semibold mb-4">Payment</h1>
-                    <FormBlock :label="'Name'" />
+                    <div id="card-element">
+
+                    </div>
+                    <!-- <FormBlock :label="'Name'" />
                     <FormBlock :label="'Card name'"/>
                     <div class="grid grid-cols-3 gap-4">
                         <div class="col-span-2">
@@ -116,7 +119,7 @@
                         <div>
                             <FormBlock :label="'CVC'" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div>
@@ -186,7 +189,7 @@
                                 </div>
                             </div>
                             
-                            <BaseButton class="py-4">Place Order</BaseButton>
+                            <BaseButton @click="processPayment" class="py-4">Place Order</BaseButton>
                 </div>
               
         
@@ -199,8 +202,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, reactive } from 'vue'
 import { useForm, usePage, Link } from  '@inertiajs/inertia-vue3'
+import { loadStripe } from '@stripe/stripe-js'
 
 import CartList from '@/Shared/components/cart/MiniCart/CartList.vue'
 import CartItem from '@/Shared/components/cart/MiniCart/CartItem.vue'
@@ -213,9 +217,12 @@ import {
     RadioGroupDescription,
     RadioGroupOption,
 } from '@headlessui/vue'
+import axios from 'axios'
 
 
-
+const stripe = ref(Object);
+const elements = ref(null);
+const cardElement = ref();
 const selected = ref(props.shippingMethods[0])
 const setBilling = ref(true)
 const shipping = props.address.shipping
@@ -245,7 +252,12 @@ const calculateTotal = (params = {
     return (subtotal + shipping + taxes) - discount;    
 }
 
-
+const card  = reactive({
+    number: 4242424242424242,
+    cvc: 123,
+    exp_month: 12,
+    exp_year: 23,
+});
 
 
 const total = ref(calculateTotal({
@@ -254,6 +266,34 @@ const total = ref(calculateTotal({
     taxes: taxes.value,
     discount: discount.value
 }))
+
+const processPayment = async () => {
+ 
+    const cardElement = elements.value.getElement('card');
+    const { paymentMethod , error } = await stripe.value.createPaymentMethod({
+        type: 'card',
+        card: cardElement,     
+        billing_details: {
+            'name': email.value,
+            'email': email.value,
+            'address': {
+                'line1': 'puro 2',
+                'city': 'Allen',
+                'state': 'Northern',
+            }
+        }
+    })
+
+    if (error) {
+        
+    }
+    const data = {
+        payment_method_id : paymentMethod.id,
+        amount : total.value,
+    }
+
+    axios.post('/test', data);
+}
 
 const form = useForm({
 
@@ -300,6 +340,18 @@ watch(selected, value => {
         discount : discount.value        
     }); 
    
+})
+
+onMounted(async() => {
+    stripe.value = await loadStripe('pk_test_51MC08XJUyYSBVRw5Atm41Nm0kb5z12ZjUYrLB9wWVrqXQ1JKLFRo40o8zZsjUHm3OYCBVE4iYYOoX8T8C8bZkpv800tdCDVRCl');
+    elements.value = stripe.value.elements();
+    cardElement.value = elements.value.create('card', {
+        classes: {
+            base : "relative block w-full appearance-none  rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" 
+        },
+    })
+
+    cardElement.value.mount('#card-element')
 })
 
 </script>

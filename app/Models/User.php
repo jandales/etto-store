@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use HasUuid;
+    use Billable;
 
     /**
      * The attributes that are mass assignable.

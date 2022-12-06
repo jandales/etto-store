@@ -23,13 +23,14 @@
                   </div>
 
                   <div class="mt-6">
-                        <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                        <Link href="/checkout" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</Link>
                   </div>
 
             </div>
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/inertia-vue3'
 const props = defineProps({
    subtotal: {
       type: Number,

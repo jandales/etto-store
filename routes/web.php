@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactUsController;
@@ -14,9 +15,9 @@ use App\Http\Controllers\Web\App\ShowProductController;
 use App\Http\Controllers\Web\App\Orders\OrderController;
 use App\Http\Controllers\Web\App\Review\StoreController;
 use App\Http\Controllers\Web\App\Orders\ShowOrderController;
+use App\Http\Controllers\Web\Payments\CreateOrderController;
 use App\Http\Controllers\Web\App\Review\ShowReviewController;
 use App\Http\Controllers\Web\App\Review\DestroyReviewController;
-use App\Http\Controllers\Web\Payments\CreateOrderController;
 use App\Http\Controllers\Web\Payments\Paypal\PaymentCancelController;
 use App\Http\Controllers\Web\Payments\Paypal\PaymentSuccessController;
 use App\Http\Controllers\Web\Payments\Paypal\PaymentProccessController;
@@ -70,6 +71,8 @@ Route::get('/checkout/payment/paypal/cancel',  PaymentCancelController::class)->
 
 Route::get('/checkout/completed/order/{order}', CreateOrderController::class)->name('checkout.completed');
 
+
+// Route::get('/test', TestController::class);
 
 require(__DIR__ . './app/guest.php');
 

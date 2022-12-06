@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProccessOrderMail;
 use App\Models\OrderItem;
 use App\Services\Web\CartServices;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
@@ -32,7 +33,7 @@ class PaymentSuccessController extends Controller
              
                 $transaction_id = $response['purchase_units'][0]['payments']['captures'][0]['id'];
 
-                $payment  = Payment::where('reference_number', $response['id'])->first(); 
+                $payment = Payment::where('reference_number', $response['id'])->first(); 
 
                 $order = Order::create([
                     'number' => $transaction_id,
@@ -63,14 +64,15 @@ class PaymentSuccessController extends Controller
 
                 }
 
+                $cartServices->deleteItems();
              
                 $payment->reference_number = $transaction_id;
                 $payment->order_id = $order->id;
                 $payment->status = strtolower($response['status']);
-                $payment->save();     
-
-                $cartServices->deleteItems();
-
+                $payment->save();   
+                
+                dispatch(new ProccessOrderMail($order));
+                
                 return $order;
 
             });

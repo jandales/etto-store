@@ -2,31 +2,28 @@
 
 namespace App\Mail;
 
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MessageMail extends Mailable
+class OrderMail extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $content;
-    public $email;
-    public $name;
-
+    
+    public $order;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($email, $name, $content)
+    public function __construct(Order $order)
     {
-        $this->name = $name;
-        $this->email   = $email;
-        $this->content = $content;
+        $this->order = $order;
+       
     }
 
     /**
@@ -37,7 +34,7 @@ class MessageMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Message Mail',
+            subject: 'Order Placed',
         );
     }
 
@@ -49,7 +46,10 @@ class MessageMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            markdown : 'mail.orders.placed',
+            with : [
+                'order' => $this->order,
+            ],
         );
     }
 
@@ -63,19 +63,6 @@ class MessageMail extends Mailable
         return [];
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
-    {
-       
-        return $this->from($this->email)
-            ->markdown('mail.contactus')
-            ->with([
-                'name' => $this->name,
-                'content' => $this->content
-            ]);
-    }
 }
+
+
