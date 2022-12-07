@@ -62,7 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('/search', SearchController::class);
 
-Route::get('/checkout', CheckoutController::class);
+Route::get('/checkout', CheckoutController::class)->middleware('auth');
 
 
 Route::get('/checkout/payment/paypal/proccess', PaymentProccessController::class)->name('paypal.process');
@@ -72,7 +72,7 @@ Route::get('/checkout/payment/paypal/cancel',  PaymentCancelController::class)->
 Route::get('/checkout/completed/order/{order}', CreateOrderController::class)->name('checkout.completed');
 
 
-// Route::get('/test', TestController::class);
+Route::post('/test', TestController::class);
 
 require(__DIR__ . './app/guest.php');
 

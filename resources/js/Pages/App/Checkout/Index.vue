@@ -203,7 +203,7 @@
 
 <script setup>
 import { ref, watch, onMounted, reactive } from 'vue'
-import { useForm, usePage, Link } from  '@inertiajs/inertia-vue3'
+import { useForm, usePage, Link, } from  '@inertiajs/inertia-vue3'
 import { loadStripe } from '@stripe/stripe-js'
 
 import CartList from '@/Shared/components/cart/MiniCart/CartList.vue'
@@ -218,6 +218,7 @@ import {
     RadioGroupOption,
 } from '@headlessui/vue'
 import axios from 'axios'
+import { Inertia } from '@inertiajs/inertia'
 
 
 const stripe = ref(Object);
@@ -267,39 +268,43 @@ const total = ref(calculateTotal({
     discount: discount.value
 }))
 
+
+
 const processPayment = async () => {
- 
+
     const cardElement = elements.value.getElement('card');
     const { paymentMethod , error } = await stripe.value.createPaymentMethod({
         type: 'card',
-        card: cardElement,     
+        card: cardElement,
         billing_details: {
-            'name': email.value,
-            'email': email.value,
-            'address': {
-                'line1': 'puro 2',
-                'city': 'Allen',
-                'state': 'Northern',
-            }
+            'name': `${form.billing.firstname} ${form.billing.lastname}` ,
+            'email': form.email,           
         }
     })
 
     if (error) {
-        
-    }
-    const data = {
-        payment_method_id : paymentMethod.id,
-        amount : total.value,
+        console.log(error);
+        return;
     }
 
-    axios.post('/test', data);
+    // const data = {
+    //     payment_method_id : paymentMethod.id,
+    //     amount : total.value,
+    //     shipping_method: selected.value.id,
+    //     shipping_amount: selected.value.amount,
+    // }
+
+    form.payment_method_id = paymentMethod.id;
+    form.amount = total.value,
+ 
+    axios.post('/test', form);
 }
 
 const form = useForm({
 
     email: usePage().props.value.auth.user?.data.email ?? null,
 
-    shiiping_method: selected.value,
+    shipping_method: selected.value,    
 
     shipping: {
         id: shipping.id,
@@ -328,8 +333,15 @@ const form = useForm({
     coupon_code : null,
     discount: 0,
     taxes: 0,
-    total : 0,    
+    total: 0,    
+
 })
+
+// const processPayment = () => {
+//     form.post('/test');
+// }
+
+
 watch(selected, value => {
     if (value == null) return;
 
