@@ -112,7 +112,7 @@ class CartServices
         return $this->cart->items->load('product');
     }
 
-    public function deleteItems()
+    public function clearCart()
     {
         foreach($this->cart->items as $item)
         {

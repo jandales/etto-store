@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Payments\Paypal;
 
+use App\Action\Payment as PayPalPayment;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,29 +11,10 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PaymentProccessController extends Controller
 {
-    public function __invoke(Request $request)
-    {
-         
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $token = $provider->getAccessToken();
+    public function __invoke(Request $request, PayPalPayment  $paypal)
+    {      
 
-        $response = $provider->createOrder([            
-            "intent" => "CAPTURE",
-            "application_context" => [
-                "return_url" => route('paypal.success'),
-                "cancel_url" => route('paypal.cancel'),
-            ],                        
-            "purchase_units" => [
-                0 => [
-                    "amount" => [
-                        "currency_code" => $request->currency,
-                        "value" => $request->amount,
-                    ]
-                ]
-            ]
-        ]);
-     
+        $response = $paypal->pay($request->amount);
 
         if (isset($response['id']) && $response['id'] != null) {
 

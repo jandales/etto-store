@@ -22,18 +22,19 @@ class OrderResource extends JsonResource
         return [
             'number' => $this->number,
             'order_placed' =>  $this->created_at->isoformat('MMMM D Y'),
-            'total' => Currency::format($this->gross_total),          
+            'total' => Currency::format($this->total),
+            'discount' => Currency::format($this->discount),
+            'taxes' =>  Currency::format($this->taxes),
             'shipped_at' => $this->shipped_at,
             'cancelled_at' => $this->cancelled_at,
             'returned_at' => $this->returned_at,
             'completed_at'=> $this->completed,
             'status' => $this->status,
-            'items' => OrderItemResource::collection($this->whenLoaded('items')),
-            'shipping_method' => ShippingMethodResource::make($this->whenLoaded('shippingMethod')),
+            'items' => OrderItemResource::collection($this->whenLoaded('items')),           
             'shipping' => AddressResource::make($this->whenLoaded('shipping')),
             'billing' => AddressResource::make($this->whenLoaded('shipping')),
             'payment' => PaymentResource::make($this->whenLoaded('payment')),
-            'discount' => Currency::format(0),
+            
         ];
     }
 }

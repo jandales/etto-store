@@ -54,8 +54,8 @@
                             </div>
                             <div>
                                 <h2 class="font-medium text-gray-900">Shipping Method</h2>
-                                <span class="block text-gray-500">{{ order.shipping_method.name   }}</span>
-                                <span class="block text-gray-500">{{ order.shipping_method.description}}</span>                           
+                                <span class="block text-gray-500">{{ order.payment.shipping_method.name   }}</span>
+                                <span class="block text-gray-500">{{ order.payment.shipping_method.description}}</span>                           
                             </div>
                     </div>
 

@@ -9,8 +9,8 @@ trait HasNumber
 {
     public static function bootHasNumber()
     {
-        static::creating(function (Model $model) {
-            $model->number = Str::uuid()->toString();
+        static::creating(function (Model $model) {        
+            $model->number = now()->timestamp . rand();
         });
     }
 }

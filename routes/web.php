@@ -18,6 +18,7 @@ use App\Http\Controllers\Web\App\Orders\ShowOrderController;
 use App\Http\Controllers\Web\Payments\CreateOrderController;
 use App\Http\Controllers\Web\App\Review\ShowReviewController;
 use App\Http\Controllers\Web\App\Review\DestroyReviewController;
+use App\Http\Controllers\Web\App\Payments\Stripe\PaymentController;
 use App\Http\Controllers\Web\Payments\Paypal\PaymentCancelController;
 use App\Http\Controllers\Web\Payments\Paypal\PaymentSuccessController;
 use App\Http\Controllers\Web\Payments\Paypal\PaymentProccessController;
@@ -72,7 +73,9 @@ Route::get('/checkout/payment/paypal/cancel',  PaymentCancelController::class)->
 Route::get('/checkout/completed/order/{order}', CreateOrderController::class)->name('checkout.completed');
 
 
+Route::post('/checkout/payment', PaymentController::class);
 Route::post('/test', TestController::class);
+
 
 require(__DIR__ . './app/guest.php');
 

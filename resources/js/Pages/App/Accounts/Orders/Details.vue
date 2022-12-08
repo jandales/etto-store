@@ -3,14 +3,19 @@
     <Account>
     <AccountPageHeading :title="title">     
     </AccountPageHeading>
-    <div class="mt-4">
+    <div class="mt-4 flex  items-center justify-between">
+      <div>
         <label for="" class="block text-gray-900">Order number</label>
         <a href="#" class="block text-indigo-500">{{ order.data.number }}</a>
+      </div>
+      <div class="capitalize bg-green-500 text-center text-white px-4 py-2 rounded-md">
+        {{order.data.status}}
+      </div>
     </div>
-    <div class="mt-4">
+    <!-- <div class="mt-4">
         <label for="" class="block text-gray-900">Tracking number</label>
         <a href="#" class="block text-indigo-500">{{ order.data.number  }}</a>
-    </div>
+    </div> -->
     <div v-for="item in order.data.items" class="border-t py-8 mt-4">
         <div class="grid grid-cols-4 gap-4">
             <div class="col-span-2">
@@ -76,7 +81,7 @@
         <div>
             <h3 class="text-base text-gray-900 font-semibold">Shipping Method</h3>
             <p class="text-wrap text-gray-700 mt-2 capitalize">
-                {{ order.data.shipping_method.name }}
+                {{ order.data.payment.shipping_method.name }}
             </p>
         </div>
 
@@ -94,7 +99,7 @@
         </div>
         <div class="flex justify-between mb-4">
             <span class="text-gray-900 font-semibold">Shipping</span>
-            <span class="text-gray-900">{{ order.data.shipping_method.amount }}</span>
+            <span class="text-gray-900">{{ order.data.payment.shipping_method.amount }}</span>
         </div>
         <div class="flex justify-between">
             <span class="text-gray-900 font-semibold">Total</span>

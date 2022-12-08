@@ -16,27 +16,21 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();          
             $table->string('number')->unique(); 
-            $table->double('tax_total')->default(0);
-            $table->double('gross_total')->default(0);
-            $table->double('net_total')->default(0);
-
-            $table->integer('shipping_method_id')->nullable();
-            $table->integer('shipping_charge')->unsigned();
-
-            $table->integer('coupon_id')->nullable();
-            $table->double('coupon_amount')->default(0);
-
+            $table->double('total')->default(0);
+            $table->double('discount')->default(0);
+            $table->double('taxes')->default(0);           
+            $table->integer('coupon_code')->nullable();
+            $table->string('status')->nullable();
+            
             $table->timestamp('shipped_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('returned_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
-
             //foreignid  
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
             $table->foreignId('shipping_id')->references('id')->on('addresses');
             $table->foreignId('billing_id')->references('id')->on('addresses');
-
-            $table->string('status')->nullable(); 
+ 
 
             $table->softDeletes();          
             $table->timestamps();

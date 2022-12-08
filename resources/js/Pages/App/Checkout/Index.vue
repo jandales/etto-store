@@ -35,24 +35,24 @@
                     <h1 class="text-gray-900 font-semibold mb-4">Shipping Information</h1>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'First name'" :type="'text'" :name="'firstname'" v-model="form.shipping.firstname" />
-                        <FormBlock :label="'Last name'"  :type="'text'" :name="'lastname'" v-model="form.shipping.lastname" />
+                        <FormBlock :label="'First name'" :type="'text'" :name="'firstname'" v-model="form.shipping_firstname" />
+                        <FormBlock :label="'Last name'"  :type="'text'" :name="'lastname'" v-model="form.shipping_lastname" />
                     </div>
         
-                    <FormBlock :label="'Street'"  :type="'text'"  :name="'street'" v-model="form.shipping.street"/>
+                    <FormBlock :label="'Street'"  :type="'text'"  :name="'street'" v-model="form.shipping_street"/>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'City'" :name="'city'" :type="'text'" v-model="form.shipping.city" />
-                        <FormBlock :label="'Country'" :name="'country'" :type="'text'" v-model="form.shipping.country" />  
+                        <FormBlock :label="'City'" :name="'city'" :type="'text'" v-model="form.shipping_city" />
+                        <FormBlock :label="'Country'" :name="'country'" :type="'text'" v-model="form.shipping_country" /> 
 
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'Region'" type="'text'" :name="'region'"  v-model="form.shipping.region" />
-                        <FormBlock :label="'Postal code'" :type="'number'"  :name="'postal_code'"   v-model="form.shipping.postalCode"/>
+                        <FormBlock :label="'Region'" type="'text'" :name="'region'"  v-model="form.shipping_region" />
+                        <FormBlock :label="'Postal code'" :type="'number'"  :name="'postal_code'"   v-model="form.shipping_zipcode"/>
                     </div>                
                    
-                    <FormBlock :label="'Phone'" :type="'text'" :name="'phone'" v-model="form.shipping.phone" />
+                    <FormBlock :label="'Phone'" :type="'text'" :name="'phone'" v-model="form.shipping_phone" />
         
         
         
@@ -126,30 +126,30 @@
 
                     <h1 class="text-gray-900 font-semibold mb-4">Billing Information</h1>
                     <div class="mb-4">                        
-                        <input type="checkbox" v-model="setBilling" name="billing" id="billing" checked class="mr-2">
+                        <input type="checkbox" v-model="form.same_as_shipping" name="billing" id="billing" checked class="mr-2">
                         <label for="">Billing address is the same as shipping address</label>
                     </div>
-                    <div v-if="!setBilling">
+                    <div v-if="!form.same_as_shipping">
 
                  
                     <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'First name'" :name="'firstname'" :type="'text'" v-model="form.billing.firstname"/>
-                        <FormBlock :label="'Last name'" :name="'lastname'" :type="'text'" v-model="form.billing.lastname" />
+                        <FormBlock :label="'First name'" :name="'firstname'" :type="'text'" v-model="form.billing_firstname"/>
+                        <FormBlock :label="'Last name'" :name="'lastname'" :type="'text'" v-model="form.billing_lastname" />
                     </div>
                     
-                    <FormBlock :label="'Street'" :name="'street'" :type="'text'" v-model="form.billing.street" />
+                    <FormBlock :label="'Street'" :name="'street'" :type="'text'" v-model="form.billing_street" />
                     
                     <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'City'" :name="'city'" :type="'text'" v-model="form.billing.city"  />
-                        <FormBlock :label="'Country'" :name="'country'" :type="'text'" v-model="form.billing.country" />
+                        <FormBlock :label="'City'" :name="'city'" :type="'text'" v-model="form.billing_city"  />
+                        <FormBlock :label="'Country'" :name="'country'" :type="'text'" v-model="form.billing_country" />
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'Region'" :name="'region'" :type="'text'" v-model="form.billing.region" />
-                        <FormBlock :label="'Postal code'" :name="'postal_code'" :type="'number'" v-model="form.billing.postalCode" />
+                        <FormBlock :label="'Region'" :name="'region'" :type="'text'" v-model="form.billing_region" />
+                        <FormBlock :label="'Postal code'" :name="'postal_code'" :type="'number'" v-model="form.billing_zipcode" />
                     </div>
                     
-                    <FormBlock :label="'Phone'" :type="'text'" :name="'phone'" v-model="form.billing.phone" />
+                    <FormBlock :label="'Phone'" :type="'text'" :name="'phone'" v-model="form.billing_phone" />
 
                     </div>
 
@@ -225,7 +225,6 @@ const stripe = ref(Object);
 const elements = ref(null);
 const cardElement = ref();
 const selected = ref(props.shippingMethods[0])
-const setBilling = ref(true)
 const shipping = props.address.shipping
 const billing = props.address.billing
 const subtotal = ref(props.cart.subtotal)
@@ -273,13 +272,13 @@ const total = ref(calculateTotal({
 const processPayment = async () => {
 
     const cardElement = elements.value.getElement('card');
-    const { paymentMethod , error } = await stripe.value.createPaymentMethod({
+    const { paymentMethod, error } = await stripe.value.createPaymentMethod({
         type: 'card',
-        card: cardElement,
-        billing_details: {
-            'name': `${form.billing.firstname} ${form.billing.lastname}` ,
-            'email': form.email,           
-        }
+        card: cardElement, 
+        'billing_details': {
+            'email': form.email,
+            'name': `${form.firstname} ${form.lastname}`
+        }      
     })
 
     if (error) {
@@ -295,46 +294,50 @@ const processPayment = async () => {
     // }
 
     form.payment_method_id = paymentMethod.id;
-    form.amount = total.value,
- 
-    axios.post('/test', form);
+    form.amount = total.value
+
+    // form.post('/test');
+
+    try {
+        const response = await axios.post('/checkout/payment', form);
+        const { url, success } = response.data
+        if (success == true)   {
+             window.location = url   
+        }
+    } catch (error) {
+        console.log(error);
+    }
+   
+   
 }
 
 const form = useForm({
-
     email: usePage().props.value.auth.user?.data.email ?? null,
-
-    shipping_method: selected.value,    
-
-    shipping: {
-        id: shipping.id,
-        firstname: shipping.firstname,
-        lastname: shipping.lastname,
-        street: shipping.street,
-        city: shipping.city,
-        region: shipping.region,
-        country: shipping.country,
-        postalCode: shipping.zipcode,
-        phone: shipping.phone,
-    },
-
-    billing: {
-        id: billing.id,
-        firstname: billing.firstname,
-        lastname: billing.lastname,
-        street: billing.street,
-        city: billing.city,
-        region: billing.region,
-        country: billing.country,
-        postalCode: billing.zipcode,
-        phone: billing.phone,
-    },
-
-    coupon_code : null,
+    shipping_method: selected.value,   
+    shipping_id: shipping.id,
+    coupon_code: null,
     discount: 0,
     taxes: 0,
-    total: 0,    
+    total: 0,
+    shipping_firstname: shipping.firstname,
+    shipping_lastname: shipping.lastname,
+    shipping_street: shipping.street,
+    shipping_city: shipping.city,
+    shipping_region: shipping.region,
+    shipping_country: shipping.country,
+    shipping_zipcode: shipping.zipcode,
+    shipping_phone: shipping.phone,
 
+    billing_id: billing.id,
+    billing_firstname: billing.firstname,
+    billing_lastname: billing.lastname,
+    billing_street: billing.street,
+    billing_city: billing.city,
+    billing_region: billing.region,
+    billing_country: billing.country,
+    billing_zipcode: billing.zipcode,
+    billing_phone: billing.phone,    
+    same_as_shipping : true,
 })
 
 // const processPayment = () => {

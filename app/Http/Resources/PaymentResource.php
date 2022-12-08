@@ -21,6 +21,7 @@ class PaymentResource extends JsonResource
             'amount'=> $this->amount,
             'status'  => $this->status,
             'date' => $this->created_at->isoFormat('YYYY, M, DDDD'),
+            'shipping_method' => ShippingMethodResource::make($this->whenLoaded('shippingMethod')),
         ];
     }
 }

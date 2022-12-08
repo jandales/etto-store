@@ -14,7 +14,7 @@ class CreateOrderController extends Controller
     public function __invoke(Order $order)
     {
        
-        $order = $order->load(['items', 'items.product', 'billing', 'shipping', 'shippingMethod', 'payment']);
+        $order = $order->load(['items', 'items.product', 'billing', 'shipping', 'payment', 'payment.shippingMethod']);
        
         return Inertia::render('App/Checkout/Complete',[
             'order' => OrderResource::make($order),

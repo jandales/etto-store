@@ -36,4 +36,13 @@ class Payment extends Model
     protected $casts = [
         //
     ];
+
+    public function shippingMethod()
+    {
+        return $this->hasOne(
+            related: ShippingMethod::class,
+            foreignKey: 'id',
+            localKey: 'shipping_method_id',
+        );
+    }
 }

@@ -26,6 +26,7 @@ class AddressController extends Controller
     {
         $validated =  $request->validated();
         $validated['user_id'] = auth()->user()->id;
+
         Address::create($validated);
 
         return redirect()->route('account.address')->with([
@@ -62,8 +63,8 @@ class AddressController extends Controller
 
     public function shipping(Address $address)
     {
-
-        $currentShipping = auth()->user()->shipping();
+        $user = auth()->user();
+                $currentShipping = $user->shipping();
 
         if ($currentShipping)
         {

@@ -21,7 +21,7 @@
     
             <OrderTitle :name="'Date Placed'" :value="order.order_placed" />
             <OrderTitle :name="'Order Number'" :value="order.number" />
-            <OrderTitle :name="'Total Amount'" :value="order.amount" />
+            <OrderTitle :name="'Total Amount'" :value="order.total" />
     
             <div class="lg:ml-auto">
                 <Link :href="`/account/orders/${order.number}/show`"
@@ -138,6 +138,7 @@ const props = defineProps({
 })
 
 const navigation = [
+    { name: 'all'},
     { name: 'pending' },
     { name: 'shipped' },
     { name: 'completed' },

@@ -3,6 +3,8 @@
 namespace App\Services\Web;
 
 use App\Models\Order;
+use App\Models\OrderItem;
+use PhpParser\Node\Expr\Cast\Double;
 
 class OrderServices {
 
@@ -20,9 +22,12 @@ class OrderServices {
 
     public function get(Order $order)
     {
-        $order->load(['items', 'items.product', 'billing', 'shipping', 'shippingMethod', 'payment']);
+        $order->load(['items', 'items.product', 'billing', 'shipping',  'payment', 'payment.shippingMethod']);
         return $order;
     }
+
+
+
 
     
 }
