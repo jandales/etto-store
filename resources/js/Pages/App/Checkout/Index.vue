@@ -13,7 +13,7 @@
             <div class="flex-1">
                 <div class="w-full mb-12 pb-4">    
 
-                    <a :href="`/checkout/payment/paypal/proccess?amount=${total}&currency=PHP&shipping_method=${selected.id}&shipping_amount=${selected.amount}`">Paypal</a>
+                    <a :href="paymentPaypalLink">Paypal</a>
 
                     <div class="flex items-center gap-2 mt-4">
                         <div class="w-full border-b  h-fit"></div>
@@ -231,6 +231,8 @@ const subtotal = ref(props.cart.subtotal)
 const discount = ref(0)
 const taxes = ref(0)
 
+
+
 const props = defineProps({
     cart: Object,
     shippingMethods: Array,
@@ -251,14 +253,6 @@ const calculateTotal = (params = {
     const { subtotal , taxes, shipping, discount } = params;
     return (subtotal + shipping + taxes) - discount;    
 }
-
-const card  = reactive({
-    number: 4242424242424242,
-    cvc: 123,
-    exp_month: 12,
-    exp_year: 23,
-});
-
 
 const total = ref(calculateTotal({
     subtotal: subtotal.value,
@@ -319,6 +313,7 @@ const form = useForm({
     discount: 0,
     taxes: 0,
     total: 0,
+    coupon_code : null,
     shipping_firstname: shipping.firstname,
     shipping_lastname: shipping.lastname,
     shipping_street: shipping.street,
@@ -340,9 +335,7 @@ const form = useForm({
     same_as_shipping : true,
 })
 
-// const processPayment = () => {
-//     form.post('/test');
-// }
+const paymentPaypalLink = ref(`/checkout/payment/paypal/proccess?email=${form.email}&amount=${total.value}&currency=PHP&shipping_method_id=${selected.value.id}&shipping_amount=${selected.value.amount}&discount=${form.discount}&taxes=${form.taxes}&coupon_code${form.coupon_code}`)
 
 
 watch(selected, value => {
@@ -368,5 +361,12 @@ onMounted(async() => {
 
     cardElement.value.mount('#card-element')
 })
+
+
+
+const paypal = () => {
+    
+    Inertia.post('/checkout/payment/paypal/proccess', form);
+}
 
 </script>

@@ -27,6 +27,41 @@ class OrderServices {
     }
 
 
+    public function createOrder(array $attributes)       
+    {
+      
+
+        $order = Order::create([
+            'user_id' => $attributes['user_id'] ?? null,
+            'total' => $attributes['total'] ?? 0,
+            'dicount' => $attributes['discount'] ?? 0,
+            'taxes' => $attributes['taxes'] ?? 0,
+            'coupon_code' => $attributes['coupon_code'] ?? null,
+            'status' => $attributes['status'],           
+            'shipping_id' => $attributes['shipping_id'] ?? null,
+            'billing_id' => $attributes['billing_id'] ?? null,
+        ]);
+
+        if (isset($attributes['cart_items']) == false) return $order; 
+
+        foreach ($attributes['cart_items'] as $item) {
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item->product_id,
+                'qty' => $item->qty,
+                'price' => $item->product->regular_price,
+                'properties' => $item->properties,
+            ]);
+        }
+
+        return $order;
+
+
+    }
+    
+
+
 
 
     

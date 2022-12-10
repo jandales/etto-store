@@ -59,7 +59,7 @@ class CheckoutServices {
         return $user;
     }
 
-    public function createOrder(int $customer_id, float $total = 0, float $discount = 0, float $taxes = 0, string $coupon_code = null,  int $shipping_id, int $billing_id, string $status )
+    public function createOrder(int $customer_id, float $total = 0, float $discount = 0, float $taxes = 0, string $coupon_code = null,  int $shipping_id, int $billing_id, string $status)
     {
         $order = Order::create([
             'total' => $total,

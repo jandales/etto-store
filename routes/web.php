@@ -63,7 +63,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('/search', SearchController::class);
 
-Route::get('/checkout', CheckoutController::class)->middleware('auth');
+Route::get('/checkout', CheckoutController::class)->middleware('auth')->name('checkout');
 
 
 Route::get('/checkout/payment/paypal/proccess', PaymentProccessController::class)->name('paypal.process');

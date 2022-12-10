@@ -7,13 +7,30 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class Payment implements IPayment
 {
-    public function pay($amount)
-    {       
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $token = $provider->getAccessToken();
+    private $provider;
 
-        $response = $provider->createOrder([
+
+    public function __construct()
+    {
+        $this->provider = new PayPalClient;
+        $this->provider->setApiCredentials(config('paypal'));
+        $this->provider->getAccessToken();  
+    }
+
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    public function capturePaymentOrder($token)
+    {  
+        return $this->provider->capturePaymentOrder($token);
+    }
+
+    public function pay($amount)
+    {           
+        
+        $response = $this->provider->createOrder([
             "intent" => "CAPTURE",
             "application_context" => [
                 "return_url" => route('paypal.success'),

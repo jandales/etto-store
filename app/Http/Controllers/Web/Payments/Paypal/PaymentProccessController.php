@@ -2,53 +2,40 @@
 
 namespace App\Http\Controllers\Web\Payments\Paypal;
 
-use App\Action\Payment as PayPalPayment;
+use App\Models\User;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\Web\CheckoutServices;
+use App\Action\Payment as PayPalPayment;
+use App\Services\Web\CartServices;
+use App\Services\Web\OrderServices;
+use App\Services\Web\ProccessPaymentServices;
+use Dotenv\Parser\Value;
 use Illuminate\Support\Facades\Redirect;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
+
 
 class PaymentProccessController extends Controller
-{
-    public function __invoke(Request $request, PayPalPayment  $paypal)
-    {      
+{    
+    public function __invoke(Request $request, ProccessPaymentServices $proccessPaymentServices, OrderServices $orderServices, CartServices $cartServices)
+    {
+        $data = array_merge($request->all(), [
+            'cart_items' => $cartServices->getItems(),
+        ]);
 
-        $response = $paypal->pay($request->amount);
+        $link = $proccessPaymentServices
+                ->init($request->amount)
+                ->createOrder($data, $orderServices)
+                ->getLinkApproved();
 
-        if (isset($response['id']) && $response['id'] != null) {
+        if (isset($link) && $link != null) {
 
-            $id = $response['id'];             
-            // redirect to approve href
-            foreach ($response['links'] as $link) {
-
-                if ($link['rel'] == 'approve') {
-
-                    Payment::create([
-                        'reference_number' => $id,
-                        'shipping_method_id' => $request->shipping_method,
-                        'shipping_amount' => $request->shipping_amount,
-                        'amount'   => $request->amount,
-                        'provider' => 'paypal',
-                        'status'   => 'pending',
-                        'user_id'  => auth()->user()->id,
-                    ]);                        
-
-                    return Redirect::away($link['href']);
-                }
-            }
-
-            return redirect()            
-                ->route('paypal')
-                ->with('error', 'Something went wrong.');
-
-        } else {
-
-            return redirect()
-                ->route('paypal')
-                ->with('error', $response['message'] ?? 'Something went wrong.');
+            return Redirect::away($link);
 
         }
 
+       return redirect()->route('checkout')->with('error', 'Something went wrong.');  
+        
     }
 }

@@ -2,28 +2,27 @@
 
 namespace App\Http\Controllers\Web\Payments\Paypal;
 
-use App\Action\OrderAction;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Jobs\ProccessOrderMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Jobs\ProccessOrderMail;
-use App\Models\OrderItem;
+use App\Action\Payment as PaypalPayment;
 use App\Services\Web\CartServices;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
-use App\Models\Payment;
-use App\Services\Web\OrderServices;
+use App\Services\Web\UserServices;
+
+
+
 
 class PaymentSuccessController extends Controller
 {
-    public function __invoke(Request $request, CartServices $cartServices, OrderAction $action)
-    {
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $provider->getAccessToken();
+    public function __invoke(Request $request, PaypalPayment $paypal, CartServices $cartServices, UserServices $userServices)
+    {   
 
-        $response = $provider->capturePaymentOrder($request['token']);     
-
+        $response = $paypal->capturePaymentOrder($request['token']);     
+     
         if (!isset($response)) return redirect()->route('paypal')->with([
             'error' => true,
             'message' => 'Something went wrong'
@@ -31,29 +30,57 @@ class PaymentSuccessController extends Controller
 
         if (isset($response) && $response['status'] == 'COMPLETED') {
 
-            $order = DB::transaction(function () use ($response, $cartServices, $action) {
+            $order = DB::transaction(function () use ($response, $cartServices) {           
+              
              
-                $transaction_id = $response['purchase_units'][0]['payments']['captures'][0]['id'];
+                $purchase_unit = $response['purchase_units'];
+                $transaction_id = $purchase_unit[0]['payments']['captures'][0]['id'];
+                $shipping_address = $purchase_unit[0]['shipping']['address'];
+                $name = explode(" ", $purchase_unit[0]['shipping']['name']['full_name']);
 
-                $payment = Payment::where('reference_number', $response['id'])->first();  
+                $email = $response['payer']['email_address'];           
+               
 
-                $order = $action->createOrder(
-                    customer_id : auth()->user()->id,
-                    total : $payment->amount,
-                    discount : 0,
-                    taxes : 0,
-                    coupon_code : null,
-                    shipping_id : auth()->user()->shipping()->id,                    
-                    billing_id : auth()->user()->billing()->id,
-                    status : 'confirmed',
-                );
-             
-                $cartServices->clearCart();
-             
+                $user = User::where('email',$email)->first();
+                
+                if (!$user) {
+                                
+
+                    $data = [
+                        'email' => $email,
+                        'firstname' =>  $response['payer']['name']['given_name'],
+                        'lastname' =>  $response['payer']['name']['surname'],
+                        'shipping_firstname' => $name[0],
+                        'shipping_lastname' =>  $name[1],
+                        'street' =>    $shipping_address['address_line_1'],
+                        'city' =>      $shipping_address['admin_area_2'],
+                        'region' =>    $shipping_address['admin_area_1'],
+                        'zipcode' =>   $shipping_address['postal_code'],
+                        'country' =>   $shipping_address['country_code'],
+                        'phone' => 0241545454,
+                        'billing' => true,
+                        'shipping' => true,
+                    ];
+
+                    $userServices->checkoutNewUser($data);              
+                    $userServices->userCreateAddress($user, $data);  
+                              
+                }           
+
+                $payment = Payment::where('reference_number', $response['id'])->first();
                 $payment->reference_number = $transaction_id;
-                $payment->order_id = $order->id;
                 $payment->status = strtolower($response['status']);
-                $payment->save();   
+                $payment->user_id = $user->id;
+                $payment->save();  
+
+                $order = Order::where('id', $payment->order_id)->first();
+                $order->status = 'confirmed';
+                $order->user_id = $user->id;   
+                $order->billing_id = $user->billing()->id;
+                $order->shipping_id = $user->shipping()->id;            
+                $order->save();
+
+                $cartServices->clearCart();
                 
                 dispatch(new ProccessOrderMail($order));
                 
