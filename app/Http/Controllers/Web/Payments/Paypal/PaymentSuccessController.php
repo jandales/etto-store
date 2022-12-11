@@ -4,52 +4,45 @@ namespace App\Http\Controllers\Web\Payments\Paypal;
 
 use App\Models\User;
 use App\Models\Order;
-use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Jobs\ProccessOrderMail;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Action\Payment as PaypalPayment;
 use App\Services\Web\CartServices;
 use App\Services\Web\UserServices;
-
-
-
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Services\Web\ProccessPaymentServices;
 
 class PaymentSuccessController extends Controller
 {
-    public function __invoke(Request $request, PaypalPayment $paypal, CartServices $cartServices, UserServices $userServices)
+    public function __invoke(Request $request, ProccessPaymentServices $proccessPaymentServices, CartServices $cartServices, UserServices $userServices)
     {   
 
-        $response = $paypal->capturePaymentOrder($request['token']);     
-     
-        if (!isset($response)) return redirect()->route('paypal')->with([
+        $response = $proccessPaymentServices->capturePaymentOrder($request->token);     
+  
+        if (!isset($response)) return redirect()->route('checkout')->with([
             'error' => true,
             'message' => 'Something went wrong'
         ]);
 
         if (isset($response) && $response['status'] == 'COMPLETED') {
 
-            $order = DB::transaction(function () use ($response, $cartServices) {           
-              
-             
+            $order = DB::transaction(function () use ($response, $cartServices, $proccessPaymentServices, $userServices)  {         
+                           
                 $purchase_unit = $response['purchase_units'];
                 $transaction_id = $purchase_unit[0]['payments']['captures'][0]['id'];
                 $shipping_address = $purchase_unit[0]['shipping']['address'];
                 $name = explode(" ", $purchase_unit[0]['shipping']['name']['full_name']);
+                $payer = $response['payer'];
+                $email = $payer['email_address'];  
 
-                $email = $response['payer']['email_address'];           
-               
-
-                $user = User::where('email',$email)->first();
+                $user = User::where('email', $email)->first();
                 
-                if (!$user) {
-                                
+                if (!$user) {                                
 
                     $data = [
                         'email' => $email,
-                        'firstname' =>  $response['payer']['name']['given_name'],
-                        'lastname' =>  $response['payer']['name']['surname'],
+                        'firstname' =>  $payer['name']['given_name'],
+                        'lastname' =>  $payer['name']['surname'],
                         'shipping_firstname' => $name[0],
                         'shipping_lastname' =>  $name[1],
                         'street' =>    $shipping_address['address_line_1'],
@@ -62,23 +55,33 @@ class PaymentSuccessController extends Controller
                         'shipping' => true,
                     ];
 
-                    $userServices->checkoutNewUser($data);              
-                    $userServices->userCreateAddress($user, $data);  
+                    $userServices->checkoutNewUser( data: $data );              
+                    $userServices->userCreateAddress(
+                        user : $user, 
+                        data : $data
+                    );  
                               
                 }           
+                            
+                $payment = $proccessPaymentServices->updatePayment(
+                    key : $response['id'], 
+                    user_id : $user->id,
+                    transaction_id : $transaction_id,
+                    status : strtolower($response['status'])
+                );
 
-                $payment = Payment::where('reference_number', $response['id'])->first();
-                $payment->reference_number = $transaction_id;
-                $payment->status = strtolower($response['status']);
-                $payment->user_id = $user->id;
-                $payment->save();  
+                $order = Order::create([                    
+                    'total' => $payment->amount,
+                    'discount' => 0,
+                    'taxes' => 0,                    
+                    'coupon_code' => null,
+                    'status' => 'confirmed',
+                    'user_id' => $user->id,
+                    'payment_id' => $payment->id,
+                    'shipping_id' => $user->shipping()->id,
+                    'billing_id' => $user->billing()->id,
+                ]);
 
-                $order = Order::where('id', $payment->order_id)->first();
-                $order->status = 'confirmed';
-                $order->user_id = $user->id;   
-                $order->billing_id = $user->billing()->id;
-                $order->shipping_id = $user->shipping()->id;            
-                $order->save();
 
                 $cartServices->clearCart();
                 

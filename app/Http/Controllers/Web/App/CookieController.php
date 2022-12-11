@@ -8,8 +8,8 @@ use App\Services\Web\CartServices;
 
 class CookieController extends Controller
 {
-    public function __invoke(CookieAction $cookie, CartServices $services)
+    public function __invoke(CartServices $services)
     {
-        return $cookie->set($services);
+        return CookieAction::handle($services);
     }
 }

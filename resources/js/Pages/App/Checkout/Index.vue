@@ -189,7 +189,11 @@
                                 </div>
                             </div>
                             
-                            <BaseButton @click="processPayment" class="py-4">Place Order</BaseButton>
+                            <BaseButton @click="processPayment" class="py-4">
+                                <ClipLoader v-if="isProccessing" :color="'#fff'" :size="'16px'"  />
+                                <label v-else>Place Order</label>                                
+                            </BaseButton>
+
                 </div>
               
         
@@ -202,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, reactive } from 'vue'
+import { ref, watch, onMounted, reactive, defineAsyncComponent } from 'vue'
 import { useForm, usePage, Link, } from  '@inertiajs/inertia-vue3'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -220,6 +224,8 @@ import {
 import axios from 'axios'
 import { Inertia } from '@inertiajs/inertia'
 
+const ClipLoader = defineAsyncComponent(() => import('vue-spinner/src/ClipLoader.vue'));
+
 
 const stripe = ref(Object);
 const elements = ref(null);
@@ -230,6 +236,7 @@ const billing = props.address.billing
 const subtotal = ref(props.cart.subtotal)
 const discount = ref(0)
 const taxes = ref(0)
+const isProccessing = ref(false);
 
 
 
@@ -280,19 +287,11 @@ const processPayment = async () => {
         return;
     }
 
-    // const data = {
-    //     payment_method_id : paymentMethod.id,
-    //     amount : total.value,
-    //     shipping_method: selected.value.id,
-    //     shipping_amount: selected.value.amount,
-    // }
-
     form.payment_method_id = paymentMethod.id;
     form.amount = total.value
 
-    // form.post('/test');
-
     try {
+        isProccessing.value = true;
         const response = await axios.post('/checkout/payment', form);
         const { url, success } = response.data
         if (success == true)   {
@@ -300,6 +299,8 @@ const processPayment = async () => {
         }
     } catch (error) {
         console.log(error);
+    } finally {
+        isProccessing.value = false;
     }
    
    

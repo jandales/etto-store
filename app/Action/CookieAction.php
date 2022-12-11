@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cookie;
 
 class CookieAction {
 
-    public function set(CartServices $services)
+    public static function handle(CartServices $services)
     {
         if (Cookie::has('cart-id')) return true;
 

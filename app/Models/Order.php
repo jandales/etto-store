@@ -29,6 +29,7 @@ class Order extends Model
         'coupon_code', 
         'status',
         'user_id',
+        'payment_id',
         'shipping_id',
         'billing_id',
     ];
@@ -68,8 +69,8 @@ class Order extends Model
     {
         return $this->hasOne(
             related : Payment::class, 
-            foreignKey : 'order_id',
-            localKey : 'id'
+            foreignKey : 'id',
+            localKey : 'payment_id'
         );
     }
 

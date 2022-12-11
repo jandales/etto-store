@@ -18,21 +18,16 @@ use Illuminate\Support\Facades\Redirect;
 
 class PaymentProccessController extends Controller
 {    
-    public function __invoke(Request $request, ProccessPaymentServices $proccessPaymentServices, OrderServices $orderServices, CartServices $cartServices)
-    {
-        $data = array_merge($request->all(), [
-            'cart_items' => $cartServices->getItems(),
-        ]);
+    public function __invoke(Request $request, ProccessPaymentServices $proccessPaymentServices)
+    {      
 
         $link = $proccessPaymentServices
                 ->init($request->amount)
-                ->createOrder($data, $orderServices)
+                ->createPayment($request->all())
                 ->getLinkApproved();
 
         if (isset($link) && $link != null) {
-
             return Redirect::away($link);
-
         }
 
        return redirect()->route('checkout')->with('error', 'Something went wrong.');  

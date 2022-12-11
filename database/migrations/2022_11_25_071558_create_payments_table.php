@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id(); 
             $table->uuid('uuid')->unique();
-            $table->string('reference_number')->index()->references('number')->on('orders');
+            $table->string('reference_number');
             $table->string('provider');            
             $table->double('amount')->default(0);
             $table->string('status');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }
