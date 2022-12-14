@@ -3,6 +3,23 @@
   <AppLayout>
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
+
+        <Alert
+          v-if="$page.props.status.success"
+          :alert="'success'"
+          :message="$page.props.status.message"
+          @close="$page.props.status.success = false"
+        />
+        
+        <Alert
+          v-if="$page.props.status.error"
+          :alert="'error'"
+          :message="$page.props.status.message"
+          @close="$page.props.status.error = false"
+        />
+
+        
+
         <div>
           <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
         </div>
@@ -39,11 +56,15 @@
 </template>
   
 <script setup>
+import { defineAsyncComponent } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 
 import AppLayout from '@/Shared/Layouts/App.vue'
 import BaseButton from '@/Shared/Base/BaseButton.vue'
 import FormBlock from '@/Shared/Base/FormBlock.vue'
+
+
+const Alert = defineAsyncComponent(() => import('@/Shared/Alerts/Alert.vue'));
 
 const form = useForm({
   email: null,

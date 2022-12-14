@@ -9,6 +9,10 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\Users\Auth\ForgotPasswordController;
+use App\Http\Controllers\Users\Auth\PasswordResetController;
+use App\Http\Controllers\Users\Auth\UpdatePasswordController;
+use App\Http\Controllers\Users\Auth\VerifyPasswordTokenController;
 use App\Http\Controllers\Web\App\CookieController;
 use App\Http\Controllers\Web\App\SearchController;
 use App\Http\Controllers\Web\App\ShowProductController;
@@ -75,6 +79,11 @@ Route::get('/checkout/completed/order/{order}', CreateOrderController::class)->n
 
 Route::post('/checkout/payment', PaymentController::class);
 Route::post('/test', TestController::class);
+
+Route::post('/auth/forgot/password', ForgotPasswordController::class);
+Route::post('/account/password/update', UpdatePasswordController::class);
+Route::get('/account/password/reset/{token}', PasswordResetController::class)->name('password.reset');
+
 
 
 require(__DIR__ . './app/guest.php');

@@ -83,6 +83,15 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
+    public function passwordReset()
+    {
+        return $this->hasOne(
+            PasswordReset::class,
+            foreignKey: 'email',
+            localKey : 'email',
+        );
+    }
+
     public function fullName()
     {
         return $this->firstname . " " . $this->lastname;

@@ -19,10 +19,13 @@ class LoginController extends Controller
 
         $user = auth()->attempt($validated);
 
-        if ($user) {
+        if ( $user ) {
             return redirect()->route('account');
         }
 
-        return back()->with('error', 'email not found');
+        return back()->with([
+            'error' => true,
+            'message' => 'Invalid credentials'
+        ]);
     }
 }

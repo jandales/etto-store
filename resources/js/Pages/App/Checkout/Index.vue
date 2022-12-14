@@ -12,8 +12,8 @@
         <div class="flex py-10 gap-12">
             <div class="flex-1">
                 <div class="w-full mb-12 pb-4">    
-
-                    <a :href="paymentPaypalLink">Paypal</a>
+                    
+                    <a :href="paymentPaypalLink" class="bg-indigo-500 text-white py-2 block text-center rounded-md hover:bg-indigo-600">Paypal</a>
 
                     <div class="flex items-center gap-2 mt-4">
                         <div class="w-full border-b  h-fit"></div>
@@ -28,132 +28,75 @@
                          <span v-if="!$page.props.auth.user" class="text-sm">Already have an account? <a href="/checkout" class="text-indigo-500"> Log in</a></span>
                     </div>
                     
-                    <FormBlock :label="'Email'" :type="'email'" :name="'email'" v-model="form.email"  />
-                </div>                
-        
-                <div class="w-full  border-b mb-12 pb-6">
-                    <h1 class="text-gray-900 font-semibold mb-4">Shipping Information</h1>
+                    <FormBlock 
+                        :label="'Email'" 
+                        :type="'email'" 
+                        :name="'email'" 
+                        v-model="form.email"
+                        :errors="errors.email"
+                      />
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'First name'" :type="'text'" :name="'firstname'" v-model="form.shipping_firstname" />
-                        <FormBlock :label="'Last name'"  :type="'text'" :name="'lastname'" v-model="form.shipping_lastname" />
-                    </div>
-        
-                    <FormBlock :label="'Street'"  :type="'text'"  :name="'street'" v-model="form.shipping_street"/>
+                </div> 
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'City'" :name="'city'" :type="'text'" v-model="form.shipping_city" />
-                        <FormBlock :label="'Country'" :name="'country'" :type="'text'" v-model="form.shipping_country" /> 
+                <AddressForm 
+                    :title="'Shipping Information'"
+                    :address="shippingForm"
+                    @updateForm="updateShippingForm"
+                    :errors="{
+                        firstname: errors.shipping_firstname,
+                        lastname: errors.shipping_lastname,
+                        street: errors.shipping_street,
+                        city: errors.shipping_city,
+                        region: errors.shipping_region,
+                        country: errors.shipping_country,
+                        zipcode: errors.shipping_zipcode,
+                        phone: errors.shipping_phone,
+                    }"              
+                />
 
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'Region'" type="'text'" :name="'region'"  v-model="form.shipping_region" />
-                        <FormBlock :label="'Postal code'" :type="'number'"  :name="'postal_code'"   v-model="form.shipping_zipcode"/>
-                    </div>                
-                   
-                    <FormBlock :label="'Phone'" :type="'text'" :name="'phone'" v-model="form.shipping_phone" />
-        
-        
-        
-                </div>
-
-                <div class="w-full  border-b mb-12 pb-6">
-                    <h1 class="text-gray-900 font-semibold mb-4">Shipping Method</h1>
-                    <div class="w-full">
-                        <div class="w-full">
-                            <RadioGroup v-model="selected">
-                                <RadioGroupLabel class="sr-only">Server size</RadioGroupLabel>
-                                <div class="space-x-8 flex">
-                                    <RadioGroupOption as="template" v-for="method in shippingMethods" :key="method.uuid" :value="method"
-                                        v-slot="{ active, checked }">
-                                        <div :class="[
-                                          active
-                                            ? 'ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-300'
-                                            : '',
-                                          checked ? 'bg-sky-900 bg-opacity-75 text-white border-0' : 'bg-white ',
-                                        ]"
-                                            class="relative flex cursor-pointer border w-1/2 rounded-lg px-5 py-4 shadow-md focus:outline-none">
-                                            <div class="flex w-full items-center justify-between">
-                                                <div class="flex items-center">
-                                                    <div class="text-sm">
-                                                        <RadioGroupLabel as="p" :class="checked ? 'text-white' : 'text-gray-900'"
-                                                            class="font-medium capitalize">
-                                                            {{ method.name }}
-                                                        </RadioGroupLabel>
-                                                        <RadioGroupDescription as="span"
-                                                            :class="checked ? 'text-sky-100' : 'text-gray-500'" class="inline">
-                                                            <span class="block mt-2">{{method.description }}</span>
-                                                            <span class="block mt-2">${{method.amount }}</span>
-                                                           
-                                                        </RadioGroupDescription>
-                                                    </div>
-                                                </div>
-                                                <div v-show="checked" class="shrink-0 text-white">
-                                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none">
-                                                        <circle cx="12" cy="12" r="12" fill="#fff" fill-opacity="0.2" />
-                                                        <path d="M7 13l3 3 7-7" stroke="#fff" stroke-width="1.5" stroke-linecap="round"
-                                                            stroke-linejoin="round" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </RadioGroupOption>
-                                </div>
-                            </RadioGroup>
-                        </div>
-                    </div>
-                </div>
+                <ShippingMethodVue 
+                    :shippingMethods="shippingMethods" 
+                    @updateOption="updateShippingMethod"
+                />
 
                 <div class="w-full  border-b mb-12 pb-6">
                     <h1 class="text-gray-900 font-semibold mb-4">Payment</h1>
                     <div id="card-element">
-
                     </div>
-                    <!-- <FormBlock :label="'Name'" />
-                    <FormBlock :label="'Card name'"/>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="col-span-2">
-                            <FormBlock :label="'Expirtion Date'" />
-                        </div>
-                        <div>
-                            <FormBlock :label="'CVC'" />
-                        </div>
-                    </div> -->
                 </div>
 
-                <div>
-
-                    <h1 class="text-gray-900 font-semibold mb-4">Billing Information</h1>
-                    <div class="mb-4">                        
-                        <input type="checkbox" v-model="form.same_as_shipping" name="billing" id="billing" checked class="mr-2">
-                        <label for="">Billing address is the same as shipping address</label>
-                    </div>
-                    <div v-if="!form.same_as_shipping">
-
-                 
-                    <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'First name'" :name="'firstname'" :type="'text'" v-model="form.billing_firstname"/>
-                        <FormBlock :label="'Last name'" :name="'lastname'" :type="'text'" v-model="form.billing_lastname" />
-                    </div>
-                    
-                    <FormBlock :label="'Street'" :name="'street'" :type="'text'" v-model="form.billing_street" />
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'City'" :name="'city'" :type="'text'" v-model="form.billing_city"  />
-                        <FormBlock :label="'Country'" :name="'country'" :type="'text'" v-model="form.billing_country" />
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <FormBlock :label="'Region'" :name="'region'" :type="'text'" v-model="form.billing_region" />
-                        <FormBlock :label="'Postal code'" :name="'postal_code'" :type="'number'" v-model="form.billing_zipcode" />
-                    </div>
-                    
-                    <FormBlock :label="'Phone'" :type="'text'" :name="'phone'" v-model="form.billing_phone" />
-
-                    </div>
-
+                <div class="mb-4">
+                    <input type="checkbox" v-model="form.same_as_shipping" name="billing" id="billing" checked class="mr-2">
+                    <label for="">Billing address is the same as shipping address</label>
                 </div>
+
+
+                <BillingAddressForm v-if="!form.same_as_shipping"
+                    :title="'Billing Information'"                    
+                    :address="{
+                        firstname: form.billing_firstname,
+                        lastname: form.billing_lastname,
+                        street: form.billing_street,
+                        city: form.billing_city,
+                        region: form.billing_region,
+                        country: form.billing_country,
+                        zipcode: form.billing_zipcode,
+                        phone: form.billing_phone,
+                    }"
+
+                    @updateForm="updateBillingForm"
+
+                    :errors="{
+                        firstname: errors.shipping_firstname,
+                        lastname: errors.shipping_lastname,
+                        street: errors.shipping_street,
+                        city: errors.shipping_city,
+                        region: errors.shipping_region,
+                        country: errors.shipping_country,
+                        zipcode: errors.shipping_zipcode,
+                        phone: errors.shipping_phone,
+                    }"
+                 />              
                         
             </div>
         
@@ -214,6 +157,8 @@ import CartList from '@/Shared/components/cart/MiniCart/CartList.vue'
 import CartItem from '@/Shared/components/cart/MiniCart/CartItem.vue'
 import FormBlock from '@/Shared/Base/FormBlock.vue'
 import BaseButton from '@/Shared/Base/BaseButton.vue'
+import AddressForm from '@/Shared/Checkout/AddressForm.vue'
+import ShippingMethodVue from '@/Shared/Checkout/ShippingMethod.vue'
 
 import {
     RadioGroup,
@@ -225,6 +170,7 @@ import axios from 'axios'
 import { Inertia } from '@inertiajs/inertia'
 
 const ClipLoader = defineAsyncComponent(() => import('vue-spinner/src/ClipLoader.vue'));
+const BillingAddressForm = defineAsyncComponent(() => import('@/Shared/Checkout/AddressForm.vue'));
 
 
 const stripe = ref(Object);
@@ -236,8 +182,8 @@ const billing = props.address.billing
 const subtotal = ref(props.cart.subtotal)
 const discount = ref(0)
 const taxes = ref(0)
+const errors = ref([]);
 const isProccessing = ref(false);
-
 
 
 const props = defineProps({
@@ -259,6 +205,10 @@ const calculateTotal = (params = {
     }) => {
     const { subtotal , taxes, shipping, discount } = params;
     return (subtotal + shipping + taxes) - discount;    
+}
+
+const updateShippingMethod = (value) => {
+    selected.value = value;
 }
 
 const total = ref(calculateTotal({
@@ -297,8 +247,9 @@ const processPayment = async () => {
         if (success == true)   {
              window.location = url   
         }
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        errors.value = err.response.data.errors;
+        console.log(errors.value.shipping_lastname);
     } finally {
         isProccessing.value = false;
     }
@@ -335,6 +286,46 @@ const form = useForm({
     billing_phone: billing.phone,    
     same_as_shipping : true,
 })
+
+
+const shippingForm = {
+    firstname: shipping.firstname,
+    lastname: shipping.lastname,
+    street: shipping.street,
+    city: shipping.city,
+    region: shipping.region,
+    country: shipping.country,
+    zipcode: shipping.zipcode,
+    phone: shipping.phone,
+}
+
+const updateShippingForm = (data) => { 
+    form.shipping_firstname = data.firstname;  
+    form.shipping_lastname = data.lastname;
+    form.shipping_street = data.street;
+    form.shipping_city = data.city;
+    form.shipping_region = data.region;
+    form.shipping_country = data.country;
+    form.shipping_zipcode = data.zipcode;
+    form.shipping_phone = data.phone;
+}
+
+const updateBillingForm = (data) => {
+    form.billing_firstname = data.firstname;
+    form.billing_lastname = data.lastname;
+    form.billing_street = data.street;
+    form.billing_city = data.city;
+    form.billing_region = data.region;
+    form.billing_country = data.country;
+    form.billing_zipcode = data.zipcode;
+    form.billing_phone = data.phone;
+}
+
+
+
+
+
+
 
 const paymentPaypalLink = ref(`/checkout/payment/paypal/proccess?email=${form.email}&amount=${total.value}&currency=PHP&shipping_method_id=${selected.value.id}&shipping_amount=${selected.value.amount}&discount=${form.discount}&taxes=${form.taxes}&coupon_code${form.coupon_code}`)
 

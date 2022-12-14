@@ -12,14 +12,28 @@
         @input="updateInput"
         class="relative block w-full appearance-none  rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         :class="{ 'border-rose-500 placeholder:text-rose-500': errors }" />
+        
+        <div class="w-full" v-if="Array.isArray(errors)">
+            <small class="block py-1 text-rose-500" v-for="error in errors">
+                {{ error }}
+            </small>
+        </div>
+        <div class="w-full" v-else>
+            <small class="block py-1 text-rose-500">
+                {{ errors }}
+            </small>
+        </div>
+
+
+        
+
     
-        <small class="block py-1 text-rose-500" v-if="errors">
-            {{ errors }}
-        </small>
+
+        
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+
 
 
 const props = defineProps({
@@ -46,13 +60,13 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    modelValue: { type: [String, Object] },
-
-    errors: {
-        type: String,
+    modelValue: {
+        type: [String, Object]
+    },
+    
+    errors : {
+        type : [Array, Object],
     }
-
-
 });
 
 const emits = defineEmits(['update:modelValue'])
